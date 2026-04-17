@@ -1,0 +1,66 @@
+VANTGARD - FLUJO DE AGENTE NOCTURNO
+
+OBJETIVO
+Este archivo define el flujo que el agente debe seguir durante una sesión larga y autónoma.
+
+REGLAS
+1. Leer primero:
+   - .github/copilot-instructions.md
+   - agent_docs/04_flujo_agente_nocturno.txt
+   - agent_docs/05_segunda_version_agresiva_backend_first.txt
+2. Analizar la estructura real del repositorio antes de codificar.
+3. No rehacer el proyecto desde cero.
+4. Trabajar sobre la base existente.
+5. Priorizar backend sobre frontend.
+6. Mantener cambios revisables y en lotes coherentes.
+7. Si una parte es demasiado grande, construir un MVP sólido y dejar el siguiente paso claro.
+8. Al finalizar, abrir Pull Request.
+
+ORDEN DE TRABAJO
+FASE 1 - Auditoría
+- Identificar apps, settings, modelos, vistas, formularios, admin, urls y dependencias.
+- Resumir qué ya existe y qué falta para un flujo de compra realista.
+
+FASE 2 - Dominio
+- Revisar Producto, Pedido, DetallePedido, usuario y estados.
+- Corregir incoherencias del modelo.
+- Añadir campos solo si son realmente necesarios.
+
+FASE 3 - Checkout
+- Construir o reforzar el flujo carrito -> checkout -> creación de pedido -> confirmación.
+- Validar método de entrega.
+- Validar método de pago a nivel de backend.
+
+FASE 4 - Tracking
+- Generar token de rastreo por pedido.
+- Crear punto de entrada para consultar estado por token.
+- Modelar estados útiles para seguimiento.
+
+FASE 5 - QR
+- Generar QR automático por pedido confirmado o creado según la lógica existente.
+- Guardar el archivo de forma compatible con Django.
+
+FASE 6 - Pagos
+- Implementar una abstracción de servicios de pago.
+- No usar claves reales.
+- Dejar mocks, adapters o placeholders seguros para integración futura.
+
+FASE 7 - Admin
+- Mejorar administración de pedidos y productos.
+- Facilitar revisión de estados, stock y trazabilidad.
+
+FASE 8 - Cierre
+- Verificar migraciones.
+- Dejar notas de dependencias.
+- Documentar pasos locales.
+- Abrir Pull Request.
+
+FORMATO DE PR
+El Pull Request debe incluir:
+- Resumen técnico
+- Cambios realizados
+- Archivos principales modificados
+- Migraciones requeridas
+- Dependencias nuevas
+- Cómo probar localmente
+- Limitaciones pendientes

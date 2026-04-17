@@ -1,0 +1,63 @@
+ESTRUCTURA DE REPO RECOMENDADA / OBJETIVO DE EVOLUCIÓN
+
+Esta NO es una orden de recrear el proyecto.
+Es una guía de organización deseada sobre la base actual.
+
+Vantgard/
+└── Vantgard/
+    └── Liquor_Store/
+        ├── manage.py
+        ├── db.sqlite3
+        ├── requirements.txt
+        ├── Liquor_Store/
+        │   ├── settings.py
+        │   ├── urls.py
+        │   ├── wsgi.py
+        │   └── asgi.py
+        ├── MainApp/
+        │   ├── admin.py
+        │   ├── apps.py
+        │   ├── forms.py
+        │   ├── models.py
+        │   ├── urls.py
+        │   ├── views.py
+        │   ├── migrations/
+        │   ├── services/
+        │   │   ├── __init__.py
+        │   │   ├── checkout.py
+        │   │   ├── payments.py
+        │   │   ├── qr_codes.py
+        │   │   ├── shipping.py
+        │   │   └── tracking.py
+        │   ├── utils/
+        │   │   ├── __init__.py
+        │   │   ├── tokens.py
+        │   │   └── money.py
+        │   ├── templates/
+        │   │   └── MainApp/
+        │   │       ├── home.html
+        │   │       ├── account.html
+        │   │       ├── cart.html
+        │   │       ├── checkout.html
+        │   │       ├── order_confirmation.html
+        │   │       ├── tracking.html
+        │   │       └── auth/
+        │   │           ├── login.html
+        │   │           └── register.html
+        │   └── tests/
+        │       ├── test_models.py
+        │       ├── test_checkout.py
+        │       ├── test_tracking.py
+        │       └── test_payments.py
+        ├── static/
+        ├── media/
+        └── .github/
+            ├── copilot-instructions.md
+            └── workflows/
+                └── django-ci.yml
+
+NOTAS
+- Si ya existe parte de esto, reutilízalo.
+- Solo crea carpetas nuevas si realmente ayudan a separar lógica importante.
+- `services/` y `utils/` son recomendados cuando la lógica empieza a crecer.
+- Los tests son un plus; si no alcanzan, al menos deja estructura preparada.

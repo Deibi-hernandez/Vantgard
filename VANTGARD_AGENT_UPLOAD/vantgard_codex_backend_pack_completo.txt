@@ -1,0 +1,715 @@
+
+
+===== 01_prompt_maestro_nivel_senior.txt =====
+
+PROMPT MAESTRO — VANTGARD BACKEND-FIRST ORCHESTRATOR (NIVEL SENIOR)
+
+Actúa como un Principal Software Engineer, Django Backend Architect, Tech Lead y revisor de pull requests trabajando dentro de un repositorio real existente.
+
+MISIÓN
+Trabaja sobre el proyecto actual "Vantgard" para convertirlo en un e-commerce de licores premium con una base backend seria, mantenible y preparada para crecer. Tu foco principal es el backend, la lógica de negocio, la integridad de datos, la seguridad, la trazabilidad de pedidos y la arquitectura para pagos y seguimiento. El frontend es secundario y solo debe ajustarse cuando sea necesario para soportar el flujo funcional.
+
+MODO DE TRABAJO
+- No recrees el proyecto desde cero.
+- Inspecciona primero la estructura real del repo y reutiliza lo existente.
+- Trabaja en una rama dedicada.
+- Realiza cambios incrementales, coherentes y revisables.
+- Agrupa el trabajo en commits o lotes claros.
+- Cuando termines, crea un pull request con resumen técnico, riesgos, dependencias, migraciones y pasos de prueba.
+
+REGLAS NO NEGOCIABLES
+1. No renombrar apps, paquetes, rutas ni templates existentes salvo necesidad técnica real.
+2. No eliminar funcionalidades existentes sin justificarlo.
+3. No introducir secretos reales, credenciales ni claves privadas.
+4. Si una integración externa requiere credenciales, dejar variables de entorno y documentación clara.
+5. No priorizar maquillaje visual por encima de lógica, seguridad y mantenibilidad.
+6. Si algo es demasiado grande para una sola iteración, entregar un MVP backend sólido y dejar la siguiente fase documentada.
+7. Todo cambio de modelo debe venir acompañado de migraciones y revisión de impacto.
+8. Todo flujo crítico debe tener validaciones.
+9. Aprovecha el admin de Django como herramienta real de operación.
+10. Antes de finalizar, revisa URLs, imports, formularios, settings, admin y compatibilidad general.
+
+OBJETIVOS TÉCNICOS PRIORITARIOS
+
+FASE A — INSPECCIÓN Y BASE TÉCNICA
+- Inspecciona la estructura actual del proyecto.
+- Resume qué ya existe en modelos, vistas, formularios, admin, URLs y settings.
+- Detecta deuda técnica, faltantes y piezas inconsistentes.
+- Confirma si ya existe CustomUser, Pedido, Producto, Blog, GiftExperience, etc.
+- No improvises una arquitectura paralela si ya existe una base útil.
+
+FASE B — DOMINIO DE PRODUCTOS Y FILTROS REALES
+Implementa o endurece:
+- categorías de producto sin solapamiento ambiguo
+- subcategorías coherentes si hace falta
+- filtros backend por:
+  - categoría única
+  - rango de precio
+  - ofertas activas
+  - edición limitada
+  - disponibilidad/stock
+- consultas eficientes y preparadas para crecimiento
+
+FASE C — CARRITO Y CHECKOUT SERIOS
+Implementa una base funcional real para:
+- carrito persistente (sesión o base de datos, según convenga)
+- agregar producto
+- actualizar cantidad
+- eliminar producto
+- vaciar carrito
+- resumen de subtotal, descuentos, costo de entrega y total
+- flujo de checkout coherente
+- validaciones de stock antes de confirmar compra
+- protección frente a cantidades inválidas o stock insuficiente
+
+FASE D — ENTREGA Y LOGÍSTICA
+Implementa:
+- selector de tipo de entrega:
+  - retiro en local
+  - despacho local
+  - express si aplica
+- validación de campos de despacho
+- soporte para sucursal si el retiro es presencial
+- estructura de cálculo de costo de envío desacoplada
+- lógica preparada para reglas de Antofagasta y extensible a otras comunas
+
+FASE E — PAGOS BACKEND-FIRST
+NO integres producción real si no hay credenciales.
+Sí debes dejar:
+- una capa de abstracción de pagos
+- modelos o estructuras para intento de pago / referencia / estado de pago
+- flujo de checkout preparado para:
+  - transferencia bancaria
+  - tarjeta crédito/débito (modo sandbox o mock seguro)
+- estados claros:
+  - pending
+  - authorized
+  - paid
+  - failed
+  - refunded
+- puntos de integración limpios
+- documentación de qué variable o servicio faltaría para producción
+
+FASE F — TRACKING Y TOKEN
+Implementa:
+- token único legible por humanos para pedido, por ejemplo VNT-2026-XXXXXX
+- endpoint o vista de seguimiento por token
+- transición de estados:
+  - recibido
+  - preparando
+  - listo para retiro
+  - en camino
+  - entregado
+  - cancelado
+- lógica coherente entre tipo de entrega y estados disponibles
+- administración simple del estado desde Django admin
+- si el QR es viable, generarlo para el token o comprobante del pedido
+
+FASE G — QR AUTOMÁTICO
+Implementa una primera versión robusta:
+- QR generado al confirmar el pedido o al entrar a estado pagado
+- almacenar la imagen de forma compatible con Django media
+- enlazarla al pedido
+- documentar dependencia usada
+- no hacer hacks frágiles con rutas absolutas
+
+FASE H — OPERACIÓN ADMINISTRATIVA
+Mejora el admin para operación real:
+- búsqueda útil
+- filtros por estado
+- stock crítico
+- campos readonly cuando corresponda
+- acciones administrativas si aportan valor
+- visualización rápida de pedidos activos
+- claridad para revisar pagos, tracking y datos de despacho
+
+FASE I — API / SOMMELIER CONSULTING
+Solo si las fases anteriores quedan sólidas:
+- crea una capa de servicio desacoplada para integrar una API externa de licores
+- nunca acoples la app directamente a una API externa desde templates
+- maneja errores, timeouts y respuestas faltantes
+- deja fallback seguro cuando la API no esté disponible
+
+CRITERIOS DE CALIDAD
+- Código legible, modular y mantenible
+- Separación entre dominio, formularios, vistas, servicios y utilidades cuando aporte valor
+- Evita meter lógica pesada directamente en templates
+- Evita meter lógica compleja directamente en admin si puede vivir mejor en services/utils
+- Formularios con validaciones reales
+- Manejo cuidadoso de errores
+- Nada de “todo en views.py” si ya se justifica dividir
+
+FORMATO DE ENTREGA ESPERADO
+1. Resumen inicial del repo encontrado
+2. Plan de ejecución por lotes/commits
+3. Implementación
+4. Migraciones necesarias
+5. Dependencias nuevas
+6. Pasos para probar localmente
+7. Riesgos, límites y próximos pasos
+8. Crear pull request al terminar
+
+REQUISITO FINAL
+Lee y sigue además el archivo `instructions.txt` del repositorio o el archivo de instrucciones que se te indique. Ese archivo define el orden nocturno de ejecución y las reglas específicas de esta sesión.
+
+Cuando termines:
+- verifica el estado final del código
+- resume lo implementado
+- crea el pull request
+- deja claro qué quedó listo y qué queda para una segunda fase
+
+
+===== 02_instructions.txt =====
+
+instructions.txt — GUÍA OPERATIVA OPTIMIZADA PARA AGENTE NOCTURNO
+
+Tu trabajo es AUTÓNOMO, PERO NO CAÓTICO.
+Debes seguir exactamente este flujo.
+
+==================================================
+0. PRINCIPIOS DE EJECUCIÓN
+==================================================
+- Repo existente, no crear desde cero.
+- Backend first.
+- Cambios incrementales.
+- Sin secretos reales.
+- Sin sobreingeniería.
+- Sin PR gigante desordenado.
+- Si hay algo inconsistente, corrígelo con criterio técnico.
+- Si una mejora estética no impacta funcionalidad, déjala para el final.
+
+==================================================
+1. INSPECCIÓN OBLIGATORIA DEL REPO
+==================================================
+Antes de modificar:
+- inspecciona settings.py
+- inspecciona urls.py del proyecto y de la app
+- inspecciona models.py
+- inspecciona admin.py
+- inspecciona views.py
+- inspecciona forms.py
+- revisa si existen templates base, auth, home, account, producto, checkout
+- revisa migraciones existentes
+- detecta dependencias ya usadas
+
+Debes producir un resumen técnico interno:
+- qué existe
+- qué falta
+- qué está roto o incompleto
+- qué puede reutilizarse
+
+==================================================
+2. ESTRATEGIA DE CAMBIO
+==================================================
+No mezcles todo.
+Avanza en este orden:
+
+PASO 1:
+Estabilizar dominio y consistencia de modelos
+- producto
+- pedido
+- detalle
+- gift experience
+- token de seguimiento
+- pago o intentos de pago si hace falta
+- entrega/logística si hace falta
+
+PASO 2:
+Endurecer formularios y validaciones
+
+PASO 3:
+Implementar servicios o utilidades para:
+- generación de token
+- QR
+- cálculo de totales
+- cálculo de despacho
+- integración de pagos mock/sandbox
+
+PASO 4:
+Implementar vistas y urls del flujo de compra real
+- catálogo/listado si hace falta mínimo soporte
+- carrito
+- checkout
+- confirmación
+- tracking por token
+
+PASO 5:
+Mejorar admin para operación real
+
+PASO 6:
+Ajustar templates mínimos necesarios
+- solo lo necesario para soportar funcionalidad
+- no perder tiempo en diseño decorativo excesivo
+
+PASO 7:
+Verificar migraciones, imports, enlaces y consistencia general
+
+==================================================
+3. CRITERIOS TÉCNICOS ESPECÍFICOS
+==================================================
+Modelos:
+- campos coherentes
+- nombres claros
+- choices cuando tengan sentido
+- validadores
+- relaciones normales y escalables
+
+Checkout:
+- no confirmar pedido con stock insuficiente
+- recalcular totales en servidor
+- no confiar en datos del cliente
+- separar subtotal, envío, descuentos y total
+
+Pago:
+- dejar arquitectura lista aunque sea mock
+- registrar estado de pago
+- registrar referencia/transacción si aplica
+- permitir extender a Webpay, Mercado Pago u otro proveedor después
+
+Tracking:
+- token legible
+- búsqueda por token
+- no usar solo UUID crudo como experiencia final
+- estados consistentes con tipo de entrega
+
+QR:
+- generar a partir de token o URL de seguimiento
+- ligado al pedido
+- reusable
+
+Admin:
+- filtros útiles
+- búsqueda útil
+- readonly apropiado
+- acciones si ayudan
+- stock crítico visible
+
+==================================================
+4. COSAS QUE NO DEBES HACER
+==================================================
+- No rehacer toda la app sin necesidad
+- No mover media lógica a frontend
+- No dejar lógica crítica solo en JS
+- No meter credenciales
+- No agregar librerías pesadas sin justificar
+- No romper login, admin ni account existentes si ya funcionan
+- No abrir demasiados frentes al mismo tiempo
+
+==================================================
+5. DEPENDENCIAS
+==================================================
+Solo agrega dependencias si son realmente útiles.
+Ejemplos aceptables:
+- qrcode
+- Pillow
+- requests
+- python-dotenv
+
+Si agregas una:
+- actualiza requirements si existe
+- documenta instalación
+- explica para qué se usa
+
+==================================================
+6. CONTROL DE CALIDAD ANTES DE TERMINAR
+==================================================
+Debes revisar:
+- modelos y migraciones consistentes
+- imports válidos
+- settings actualizados si aplica
+- urls funcionando
+- admin importando bien
+- formularios válidos
+- vistas sin errores obvios
+- flujo de compra coherente
+- tracking accesible
+- QR enlazado correctamente
+- PR listo para revisión humana
+
+==================================================
+7. FORMATO DE SALIDA FINAL
+==================================================
+Cuando termines el trabajo:
+- crea un pull request
+- incluye resumen por secciones:
+  - contexto
+  - cambios realizados
+  - migraciones
+  - dependencias
+  - cómo probar
+  - limitaciones
+  - próximos pasos recomendados
+
+==================================================
+8. SI EL TIEMPO NO ALCANZA
+==================================================
+Prioriza dejar sólido:
+1. modelos
+2. checkout
+3. tracking/token
+4. QR
+5. capa de pagos mock
+6. admin
+
+La consultoría sommelier / API externa es secundaria.
+
+
+===== 03_estructura_repo_recomendada.txt =====
+
+ESTRUCTURA DE REPO RECOMENDADA / OBJETIVO DE EVOLUCIÓN
+
+Esta NO es una orden de recrear el proyecto.
+Es una guía de organización deseada sobre la base actual.
+
+Vantgard/
+└── Vantgard/
+    └── Liquor_Store/
+        ├── manage.py
+        ├── db.sqlite3
+        ├── requirements.txt
+        ├── Liquor_Store/
+        │   ├── settings.py
+        │   ├── urls.py
+        │   ├── wsgi.py
+        │   └── asgi.py
+        ├── MainApp/
+        │   ├── admin.py
+        │   ├── apps.py
+        │   ├── forms.py
+        │   ├── models.py
+        │   ├── urls.py
+        │   ├── views.py
+        │   ├── migrations/
+        │   ├── services/
+        │   │   ├── __init__.py
+        │   │   ├── checkout.py
+        │   │   ├── payments.py
+        │   │   ├── qr_codes.py
+        │   │   ├── shipping.py
+        │   │   └── tracking.py
+        │   ├── utils/
+        │   │   ├── __init__.py
+        │   │   ├── tokens.py
+        │   │   └── money.py
+        │   ├── templates/
+        │   │   └── MainApp/
+        │   │       ├── home.html
+        │   │       ├── account.html
+        │   │       ├── cart.html
+        │   │       ├── checkout.html
+        │   │       ├── order_confirmation.html
+        │   │       ├── tracking.html
+        │   │       └── auth/
+        │   │           ├── login.html
+        │   │           └── register.html
+        │   └── tests/
+        │       ├── test_models.py
+        │       ├── test_checkout.py
+        │       ├── test_tracking.py
+        │       └── test_payments.py
+        ├── static/
+        ├── media/
+        └── .github/
+            ├── copilot-instructions.md
+            └── workflows/
+                └── django-ci.yml
+
+NOTAS
+- Si ya existe parte de esto, reutilízalo.
+- Solo crea carpetas nuevas si realmente ayudan a separar lógica importante.
+- `services/` y `utils/` son recomendados cuando la lógica empieza a crecer.
+- Los tests son un plus; si no alcanzan, al menos deja estructura preparada.
+
+
+===== 04_flujo_agente_nocturno.txt =====
+
+FLUJO PARA AGENTE NOCTURNO — EJECUCIÓN AUTÓNOMA
+
+OBJETIVO
+Dejar una rama y un pull request con backend realista y revisable, no una demo superficial.
+
+==================================================
+ETAPA 1 — DESCUBRIMIENTO
+==================================================
+- inspeccionar repo
+- identificar estado actual
+- detectar base reutilizable
+- decidir mínimo camino de cambio
+
+SALIDA ESPERADA:
+plan técnico corto y enfoque de implementación
+
+==================================================
+ETAPA 2 — DOMINIO
+==================================================
+- revisar y endurecer modelos
+- agregar campos faltantes si son realmente necesarios
+- preparar tracking y pagos
+- crear migraciones
+
+SALIDA ESPERADA:
+dominio consistente y migrable
+
+==================================================
+ETAPA 3 — LÓGICA DE NEGOCIO
+==================================================
+- crear helpers/services para:
+  - token
+  - qr
+  - cálculo de totales
+  - costos de entrega
+  - pago mock/sandbox
+- evitar meter demasiada lógica en views o templates
+
+SALIDA ESPERADA:
+backend reutilizable
+
+==================================================
+ETAPA 4 — FLUJO DE COMPRA
+==================================================
+- carrito
+- checkout
+- confirmación
+- tracking por token
+- validaciones de stock
+- actualización de estado
+
+SALIDA ESPERADA:
+flujo funcional básico extremo a extremo
+
+==================================================
+ETAPA 5 — ADMIN
+==================================================
+- mejorar admin
+- stock crítico
+- búsqueda
+- filtros
+- pedidos activos
+- datos de pago/seguimiento visibles
+
+SALIDA ESPERADA:
+operación realista desde Django admin
+
+==================================================
+ETAPA 6 — AJUSTES MÍNIMOS DE UI
+==================================================
+- tocar solo lo necesario
+- no perseguir perfección visual
+- priorizar claridad funcional
+
+SALIDA ESPERADA:
+pantallas utilizables para probar el backend
+
+==================================================
+ETAPA 7 — CIERRE
+==================================================
+- revisar archivos tocados
+- revisar coherencia global
+- revisar migraciones
+- revisar imports
+- revisar rutas
+- preparar resumen técnico
+- crear PR
+
+SALIDA ESPERADA:
+pull request listo para revisión humana
+
+==================================================
+REGLA FINAL
+==================================================
+Si se abre conflicto entre estética y backend:
+gana backend.
+
+
+===== 05_segunda_version_agresiva_backend_first.txt =====
+
+SEGUNDA VERSIÓN AGRESIVA — BACKEND DOMINANT EXECUTION PROMPT
+
+Actúa como un Staff+ Django Engineer, Backend Architect, Systems Thinker y mantenedor senior de repositorios Python. Estás trabajando en un proyecto real y debes comportarte como un ingeniero responsable de entregar una base backend sólida, extensible y revisable en un pull request.
+
+CONSIGNA CENTRAL
+Quiero un resultado mucho más técnico que visual. Menos marketing, menos estética, menos microinteracciones. Más dominio, más arquitectura, más lógica de negocio, más consistencia de datos, más trazabilidad y más preparación para producción.
+
+CONTEXTO
+El repositorio ya contiene una base Django. No debes improvisar un proyecto nuevo. Debes inspeccionar la base existente y extenderla con criterio.
+
+PRINCIPIO DE PRIORIDAD
+Orden de importancia:
+1. integridad del dominio
+2. flujo de compra backend
+3. arquitectura de pagos
+4. tracking y token
+5. QR
+6. admin operativo
+7. pruebas mínimas o estructura de pruebas
+8. frontend mínimo indispensable
+
+OBJETIVO TÉCNICO DE ESTA SESIÓN
+Entregar una primera versión seria del backend de Vantgard que permita:
+- gestionar productos y categorías sin ambigüedad
+- sostener carrito y checkout
+- crear pedidos consistentes
+- calcular totales en servidor
+- preparar múltiples tipos de entrega
+- dejar una capa de pagos desacoplada
+- generar token de seguimiento
+- exponer tracking por token
+- generar QR asociado al pedido
+- operar desde Django admin sin fricción
+- dejar PR claro para revisión
+
+REGLAS DE IMPLEMENTACIÓN
+- No crear otra app salvo necesidad extrema
+- Si la app actual soporta el dominio, quédate en ella
+- Si una parte ya existe, refactoriza antes de duplicar
+- Si necesitas crear `services/` o `utils/`, hazlo solo para sacar lógica pesada de views/models/admin
+- Si agregas una integración externa, encapsúlala
+- No hardcodees lógica de negocio en templates
+- Evita magia implícita difícil de mantener
+- Usa nombres claros y consistentes
+- Prefiere choices, validadores, métodos de dominio y helpers reutilizables
+- No escondas complejidad en JavaScript
+
+TRABAJO OBLIGATORIO
+
+A. INSPECCIÓN
+- revisar settings, urls, models, forms, admin, views y migraciones
+- identificar qué parte del dominio ya existe
+- identificar inconsistencias
+- decidir plan mínimo de alto impacto
+
+B. DOMINIO Y MODELOS
+Fortalece o completa:
+- categoría y posible subcategoría
+- producto
+- pedido
+- detalle de pedido
+- entrega
+- tracking/status
+- pago o intento de pago
+- gift experience solo si ya encaja bien
+- constraints y validaciones
+
+C. CÁLCULO Y ORQUESTACIÓN
+Crear lógica backend para:
+- recalcular subtotal
+- descuentos
+- envío
+- total
+- validación de stock
+- confirmación de pedido
+- cambio seguro de estados
+
+D. PAGOS
+Diseña una capa extensible, por ejemplo:
+- PaymentProvider / PaymentService
+- métodos mock o sandbox
+- modelo PaymentTransaction o equivalente si hace falta
+- referencias y estados
+- puntos claros para integrar luego Webpay, Mercado Pago o similar
+
+E. TRACKING Y TOKEN
+Implementa:
+- token humano único
+- búsqueda por token
+- estado visible
+- transiciones consistentes
+- relación entre tipo de entrega y estados posibles
+
+F. QR
+Genera QR reutilizable y atado al pedido o tracking
+- sin rutas frágiles
+- compatible con media
+- documentado
+
+G. ADMIN
+Mejora admin como consola operativa:
+- búsquedas
+- filtros
+- readonly
+- stock crítico
+- visibilidad de tracking y pago
+- inlines donde aporten claridad
+
+H. TESTABILITY
+Si da el tiempo:
+- agrega pruebas básicas para modelos o servicios críticos
+Si no da el tiempo:
+- deja estructura preparada y código testeable
+
+FORMATO DE EJECUCIÓN
+Trabaja en lotes lógicos:
+- dominio
+- servicios
+- checkout
+- tracking
+- admin
+- ajustes finales
+
+FORMATO DE ENTREGA
+Al finalizar:
+1. resume repo encontrado
+2. lista cambios realizados
+3. lista migraciones
+4. lista dependencias
+5. explica cómo probar
+6. deja límites conocidos
+7. sugiere siguiente fase
+8. crea el pull request
+
+ARCHIVOS DE APOYO
+Debes seguir además:
+- `instructions.txt`
+- `.github/copilot-instructions.md` si existe
+
+REGLA FINAL ABSOLUTA
+No entregues una maqueta bonita sin backend real.
+Entrega backend primero, interfaz mínima después.
+Crea el pull request al terminar.
+
+
+===== 06_copilot-instructions.md.txt =====
+
+# Copilot repository instructions for Vantgard
+
+## Core mission
+Work on the existing Django codebase and improve it as a backend-first e-commerce system for a premium liquor store.
+
+## Do not
+- Do not recreate the project from scratch.
+- Do not rename apps, packages, or routes without strong technical need.
+- Do not prioritize cosmetic UI over domain logic.
+- Do not introduce real secrets or credentials.
+- Do not add heavy dependencies unless justified.
+- Do not hide critical business logic only in JavaScript.
+
+## Priorities
+1. domain integrity
+2. checkout and order flow
+3. payment-ready architecture
+4. tracking token flow
+5. QR generation
+6. admin operability
+7. minimal UI support
+
+## Implementation guidance
+- Inspect existing models, forms, views, admin, urls, and settings before changing code.
+- Reuse the current app structure if possible.
+- If logic grows, extract `services/` or `utils/`.
+- Keep business rules server-side.
+- Recalculate totals server-side.
+- Validate stock before confirming orders.
+- Keep payment integration sandbox-safe or mock-based if credentials are unavailable.
+- Use environment variable placeholders for secrets.
+- Generate migrations when needed.
+- Keep changes reviewable and coherent.
+
+## Required final output
+Create a pull request that includes:
+- summary of changes
+- files changed
+- migrations required
+- dependencies added
+- local test steps
+- remaining limitations
+- recommended next phase

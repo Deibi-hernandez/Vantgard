@@ -1,0 +1,96 @@
+VANTGARD - SEGUNDA VERSION AGRESIVA BACKEND FIRST
+
+MISIÓN
+Trabajar de forma autónoma sobre el repositorio Django existente para convertir el backend en una base seria de e-commerce, priorizando lógica de negocio, estructura de dominio y capacidad operativa.
+
+NO HACER
+- No rehacer el proyecto desde cero
+- No cambiar nombres de apps principales sin necesidad
+- No concentrarse en maquillaje visual
+- No agregar integraciones reales con credenciales sensibles
+- No dejar cambios masivos desordenados
+
+ENFOQUE
+1. Integridad del dominio
+2. Flujo de compra realista
+3. Pagos preparados para integración segura
+4. Tracking y QR
+5. Administración operativa
+6. UI mínima necesaria para soportar el backend
+
+TAREAS PRIORITARIAS
+
+A. MODELO DE NEGOCIO
+- Revisar consistencia de Producto, Pedido y DetallePedido
+- Incorporar o fortalecer:
+  - token de rastreo único legible
+  - estados de pedido útiles
+  - tipo de entrega
+  - datos de despacho
+  - referencia a método de pago
+  - timestamps claros
+- Evitar duplicación innecesaria
+
+B. CARRITO Y CHECKOUT
+- Construir o robustecer:
+  - agregar al carrito
+  - actualizar cantidades
+  - quitar productos
+  - resumen
+  - confirmación de compra
+- Usar sesión, base de datos o estrategia consistente con el proyecto
+- Validar stock antes de confirmar pedido
+
+C. PAGO
+- Implementar capa de servicio:
+  - payment service abstraction
+  - interfaz mock o sandbox-ready
+  - estados de pago
+  - respuesta de éxito y fallo
+- No usar secretos reales
+- Dejar puntos claros para integración futura
+
+D. TRACKING
+- Crear lógica de consulta por token
+- Permitir ver estado actual del pedido
+- Preparar stepper/status flow a nivel de datos aunque el frontend sea simple
+
+E. QR
+- Generar QR vinculado al pedido
+- Guardarlo en media o storage compatible
+- Asociarlo a confirmación o trazabilidad del pedido
+
+F. ADMIN
+- Optimizar admin para:
+  - pedidos
+  - productos
+  - detalle de pedido
+  - stock bajo
+  - estado de pago
+  - tracking token
+- Priorizar utilidad operativa
+
+G. CALIDAD
+- Validaciones en formularios o servicios
+- Manejo de errores razonable
+- Comentarios solo donde aporten
+- Código mantenible y legible
+
+ENTREGABLE FINAL
+Abrir un Pull Request con:
+- resumen ejecutivo
+- decisiones técnicas
+- migraciones
+- dependencias nuevas
+- riesgos
+- pasos de prueba
+- próximos pasos recomendados
+
+SI EL TIEMPO NO ALCANZA
+Entregar un MVP fuerte de:
+- dominio
+- checkout
+- tracking
+- QR
+- pagos mock
+y explicar lo pendiente en el PR.

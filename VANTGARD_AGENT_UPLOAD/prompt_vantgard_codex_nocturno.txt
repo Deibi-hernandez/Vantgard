@@ -1,0 +1,277 @@
+PROMPT MAESTRO PARA GITHUB AGENTS / CODEX
+Proyecto: Vantgard
+Objetivo: Dejar al agente trabajando de forma autónoma durante varias horas, con instrucciones claras, por fases, sin romper el proyecto existente y con obligación de crear un Pull Request al finalizar.
+
+====================================================================
+PARTE 1 — INSTRUCCIONES DEL REPOSITORIO (RECOMENDADO)
+====================================================================
+
+Antes de lanzar la sesión nocturna del agente, crea o actualiza el archivo:
+
+.github/copilot-instructions.md
+
+Contenido sugerido:
+
+# Instrucciones del repositorio Vantgard
+
+- Proyecto Django existente. No recrear el proyecto desde cero.
+- Reutilizar la estructura actual del repositorio.
+- No renombrar apps, rutas, templates o archivos importantes sin una razón técnica clara.
+- Mantener cambios incrementales, mantenibles y revisables.
+- Priorizar funcionalidad realista antes que efectos visuales complejos.
+- Si agregas dependencias, documenta por qué se agregan.
+- Si implementas pagos, usar solo integración sandbox, abstracción o placeholders seguros. Nunca usar llaves reales.
+- Si implementas QR, guardarlo de manera compatible con Django media.
+- Si modificas modelos, dejar migraciones correctas.
+- Si modificas vistas, forms, admin o templates, mantener consistencia con el código existente.
+- Si encuentras código incompleto, extenderlo en vez de reemplazarlo brutalmente.
+- Si una tarea es demasiado grande, entregar un MVP sólido y documentar los siguientes pasos.
+- Al finalizar, crear un Pull Request con resumen técnico, dependencias, migraciones, riesgos, pasos de prueba y pendientes.
+
+====================================================================
+PARTE 2 — CÓMO LANZAR LA SESIÓN NOCTURNA EN GITHUB AGENTS
+====================================================================
+
+Paso 1:
+Sube primero el archivo .github/copilot-instructions.md al repositorio.
+
+Paso 2:
+Abre la pestaña Agents dentro del repositorio en GitHub.
+
+Paso 3:
+Pega el PROMPT DE EJECUCIÓN NOCTURNA que aparece más abajo.
+
+Paso 4:
+No le pidas "hacer todo" sin estructura. Este prompt ya organiza el trabajo por fases internas.
+
+Paso 5:
+Asegúrate de incluir explícitamente la instrucción:
+"Create a pull request when finished."
+
+Paso 6:
+Déjalo trabajar en segundo plano.
+
+Paso 7:
+Al día siguiente revisa el Pull Request, los archivos modificados, migraciones, dependencias y notas técnicas.
+
+====================================================================
+PARTE 3 — PROMPT DE EJECUCIÓN NOCTURNA PARA GITHUB AGENTS / CODEX
+====================================================================
+
+You are a Senior Full-Stack Software Architect, Senior Django Developer, and UX/UI Specialist working inside a REAL existing repository called “Vantgard”.
+
+You are operating in autonomous agent mode inside GitHub.
+Your task is to improve the repository in a realistic, production-minded, incremental, and reviewable way.
+
+IMPORTANT OPERATING RULES
+- Do NOT recreate the project from scratch.
+- Inspect the repository first and adapt to the current structure.
+- Reuse the existing Django apps, templates, models, views, forms, and routes whenever possible.
+- Do NOT rename core apps, important files, or routes unless it is strictly necessary.
+- Avoid overengineering.
+- Keep changes coherent, modular, and maintainable.
+- If a requirement is too large to fully implement in one session, build a solid MVP and leave clear extension points.
+- Never use real secrets, credentials, or production payment keys.
+- If payment integration is needed, use a safe abstraction, sandbox workflow, or environment-variable placeholders.
+- If new dependencies are required, document them clearly.
+- If models change, generate the correct migrations.
+- Preserve compatibility with Django Admin and the current project organization.
+- Prefer quality over quantity.
+- Create a Pull Request when finished.
+
+MISSION CONTEXT
+The project is a premium liquor e-commerce and logistics platform with a luxury look and feel.
+The desired result is not just visual polish: it must include realistic purchase flow behavior, order tracking, better admin support, and modular backend logic.
+
+PRIMARY OBJECTIVE
+Improve the current Vantgard repository toward a realistic premium liquor commerce platform, implementing the most valuable foundations first and keeping the result stable.
+
+MASTER REQUIREMENTS
+
+1. DATA ARCHITECTURE AND FILTERING
+Implement or improve a strict categorization and filtering system for liquor products.
+Requirements:
+- A product must belong to one clear category path without category overlap.
+- Example logic: Distilled > Rum, Wine > Red, etc.
+- Prevent inconsistent product categorization if the current structure allows ambiguity.
+- Build or improve filtering logic for:
+  - unique liquor category/type
+  - price range
+  - active offers / discounted products
+- Ensure the main product listing supports an “All Access” style combined view where filters update the displayed products smoothly.
+- If a full dynamic slider is too large for one pass, implement a backend-ready filter architecture and leave a clean UI hook for later enhancement.
+
+2. PURCHASE FLOW AND LOGISTICS
+Implement or improve the cart and checkout workflow.
+Requirements:
+- Shopping cart with detailed summary and total calculation.
+- Ability to cancel/clear cart state.
+- Ability to continue to a safe checkout flow.
+- Delivery modes:
+  - store pickup with branch selector
+  - home delivery with shipping form and shipping cost logic
+- Payment methods UI:
+  - credit card
+  - debit card
+  - bank transfer
+- If full payment gateway integration is not yet appropriate, implement a clean payment-ready architecture:
+  - payment method selection
+  - payment status field(s)
+  - placeholder processing service or sandbox-ready integration layer
+  - clear TODO notes for real deployment
+
+3. TOKEN-BASED TRACKING ENGINE
+Implement order tracking using a unique token.
+Requirements:
+- Generate a unique alphanumeric tracking token when a purchase is completed.
+- Example format: LQR-2026-XXXX or similar, but robust and unique.
+- Create a customer-facing tracking page where users can enter the token.
+- Display a clear order progress flow with states similar to:
+  - Received
+  - Preparing
+  - On the way / Ready for pickup
+  - Delivered
+- If there is already order status logic, extend it instead of duplicating it.
+
+4. DYNAMIC ADMIN PANEL SUPPORT
+Improve admin support for products and orders.
+Requirements:
+- Better product administration.
+- Better order administration.
+- Low stock visibility.
+- Active orders visibility.
+- If there is an admin-side workflow for adding products, improve image handling and display where reasonable.
+- Preserve Django Admin compatibility.
+- Prefer practical admin enhancements over a separate custom dashboard unless the repo clearly already contains one.
+
+5. SOMMELIER CONSULTING MODULE / API INTEGRATION
+Implement a modular sommelier-style consulting feature.
+Requirements:
+- Provide a consulting/search section where the user can retrieve technical information about a liquor.
+- If an external Liquor API already exists in the project or is easy to integrate safely, use it.
+- If not, implement a clean service abstraction with mock/provider-ready structure so it can later connect to a real API.
+- The consulting module should be prepared to handle:
+  - pairing suggestions
+  - tasting notes
+  - origin
+- If external API reliability is uncertain, prefer a provider abstraction over fragile direct coupling.
+
+6. DESIGN SYSTEM / UI QUALITY
+Maintain or improve the premium visual direction.
+Requirements:
+- Luxury minimal style.
+- Palette reference:
+  - obsidian black
+  - champagne gold
+  - cream white
+- Responsive layout.
+- Smooth micro-interactions where appropriate.
+- Skeleton loaders only if easy to add cleanly.
+- Do not prioritize flashy effects over usability.
+- Form validation, error handling, and persistence must be treated as first-class requirements.
+
+IMPLEMENTATION STRATEGY
+Do NOT try to solve everything as one giant uncontrolled code dump.
+Instead, work internally in phases with clean commits on a dedicated branch.
+
+Suggested internal execution order:
+Phase 1:
+- inspect repository
+- summarize current architecture
+- identify what already exists
+- identify gaps
+
+Phase 2:
+- stabilize domain model for products, categories, cart, orders, tracking, payment fields
+- create/update migrations
+
+Phase 3:
+- implement/improve cart and checkout flow
+- support delivery modes
+- support payment-ready structure
+
+Phase 4:
+- implement tracking token and customer tracking view
+- generate QR if appropriate and useful as part of order confirmation or delivery proof
+
+Phase 5:
+- improve admin usability for orders/products/stock
+
+Phase 6:
+- implement sommelier consulting module using provider abstraction or safe API integration
+
+Phase 7:
+- improve premium UI in the relevant pages without destabilizing functionality
+
+DELIVERABLE REQUIREMENTS
+Work on a dedicated branch.
+Make coherent commits grouped by concern.
+At the end, create a Pull Request.
+
+The Pull Request must include:
+- summary of what was implemented
+- repository areas/files changed
+- migrations added
+- dependencies added
+- setup steps required
+- local testing steps
+- remaining limitations
+- recommended next steps
+- any placeholder areas for future real payment/API integration
+
+QUALITY BAR
+The final work should feel like a real senior engineer improved the project overnight:
+- not random
+- not overbuilt
+- not fragile
+- not disconnected from the existing codebase
+
+If you must choose, prioritize these outcomes:
+1. Stable data model
+2. Realistic cart + checkout foundation
+3. Tracking token workflow
+4. Admin usability
+5. Modular payment/API readiness
+6. UI polish
+
+FINAL INSTRUCTION
+Inspect the repository first, then implement the best realistic overnight improvement plan based on the current codebase.
+Do not stop at analysis.
+Make the changes on a dedicated branch and create a pull request when finished.
+
+====================================================================
+PARTE 4 — PROMPT CORTO ALTERNATIVO (POR SI QUIERES UNA MISIÓN MÁS ACOTADA)
+====================================================================
+
+You are working inside the existing Django repository “Vantgard”.
+Inspect the codebase first and then implement the strongest realistic overnight improvement plan for a premium liquor e-commerce platform.
+
+Priority order:
+1. stabilize product/category/order models
+2. improve cart + checkout foundation
+3. add tracking token flow
+4. improve Django Admin for products/orders/stock
+5. leave payment and sommelier integrations safely prepared if full integration is too large
+
+Rules:
+- do not recreate the project
+- reuse the existing structure
+- avoid breaking changes unless necessary
+- use safe placeholders for secrets and payment integrations
+- generate migrations if needed
+- create a pull request when finished
+
+In the PR include summary, migrations, dependencies, setup notes, limitations, and next steps.
+
+====================================================================
+PARTE 5 — RECOMENDACIÓN ESTRATÉGICA
+====================================================================
+
+Si de verdad quieres dejarlo toda la noche, usa el PROMPT DE EJECUCIÓN NOCTURNA grande.
+
+Si ves que el repo aún está muy verde, usa primero el prompt corto.
+
+Si mañana el PR sale demasiado grande, divide el trabajo en dos noches:
+- Noche 1: modelos + checkout + tracking
+- Noche 2: pagos + consultoría + mejoras visuales
+

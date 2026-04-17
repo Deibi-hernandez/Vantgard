@@ -1,0 +1,30 @@
+CÓMO USAR ESTA CARPETA
+
+Esta carpeta ya viene lista para subir al repositorio o para descomprimir y arrastrar completa.
+
+ESTRUCTURA
+- .github/copilot-instructions.md
+- agent_docs/04_flujo_agente_nocturno.txt
+- agent_docs/05_segunda_version_agresiva_backend_first.txt
+- PROMPT_ARRANQUE_AGENT.txt
+
+QUÉ HACER
+1. Sube o arrastra la carpeta completa respetando la estructura.
+2. Verifica en GitHub que exista:
+   - .github/copilot-instructions.md
+   - agent_docs/04_flujo_agente_nocturno.txt
+   - agent_docs/05_segunda_version_agresiva_backend_first.txt
+3. Abre GitHub > Agents
+4. Copia y pega el contenido de PROMPT_ARRANQUE_AGENT.txt
+5. Inicia la sesión del agente
+
+NOTA SOBRE WINDOWS
+No necesitas renombrar manualmente un archivo con slash.
+La estructura ya viene separada en carpetas reales:
+- una carpeta .github
+- una carpeta agent_docs
+
+Si subes la carpeta descomprimida completa o recreas esas carpetas en GitHub, quedará bien.
+
+RESULTADO ESPERADO
+El agente leerá esos archivos, seguirá las instrucciones y al terminar abrirá un Pull Request.
