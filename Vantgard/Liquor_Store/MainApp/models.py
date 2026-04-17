@@ -1,13 +1,17 @@
 import uuid
+import secrets
+from io import BytesIO
 from decimal import Decimal
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.core.files.base import ContentFile
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+import qrcode
 
 
 def build_unique_slug(instance, source_value, slug_field="slug"):
@@ -21,6 +25,10 @@ def build_unique_slug(instance, source_value, slug_field="slug"):
         counter += 1
 
     return slug
+
+
+def build_unique_tracking_token():
+    return secrets.token_urlsafe(12).replace("-", "").replace("_", "").lower()[:20]
 
 
 class CustomUser(AbstractUser):
@@ -139,7 +147,26 @@ class Pedido(models.Model):
         ENVIO_LOCAL = "envio_local", "Envio local"
         ENVIO_EXPRESS = "envio_express", "Envio Express 90 min"
 
+    class MetodoPago(models.TextChoices):
+        MOCK_CARD = "mock_card", "Tarjeta (mock)"
+        MOCK_TRANSFER = "mock_transfer", "Transferencia (mock)"
+        CASH_ON_DELIVERY = "cash_on_delivery", "Pago contra entrega"
+
+    class EstadoPago(models.TextChoices):
+        PENDIENTE = "pendiente", "Pendiente"
+        APROBADO = "aprobado", "Aprobado"
+        RECHAZADO = "rechazado", "Rechazado"
+        REEMBOLSADO = "reembolsado", "Reembolsado"
+
     codigo = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    tracking_token = models.CharField(
+        max_length=40,
+        unique=True,
+        db_index=True,
+        editable=False,
+        blank=True,
+        null=True,
+    )
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -158,6 +185,18 @@ class Pedido(models.Model):
         default=Decimal("0.00"),
         validators=[MinValueValidator(Decimal("0.00"))],
     )
+    metodo_pago = models.CharField(
+        max_length=30,
+        choices=MetodoPago.choices,
+        default=MetodoPago.MOCK_CARD,
+    )
+    estado_pago = models.CharField(
+        max_length=20,
+        choices=EstadoPago.choices,
+        default=EstadoPago.PENDIENTE,
+    )
+    referencia_pago = models.CharField(max_length=120, blank=True)
+    mensaje_pago = models.CharField(max_length=255, blank=True)
     qr_code = models.ImageField(upload_to="pedidos/qr/", blank=True, null=True)
     gift_experience = models.OneToOneField(
         GiftExperience,
@@ -185,6 +224,57 @@ class Pedido(models.Model):
 
     def __str__(self):
         return f"Pedido {self.codigo}"
+
+    def clean(self):
+        if self.tipo_entrega != self.TipoEntrega.RETIRO:
+            required_fields = {
+                "direccion": self.direccion,
+                "comuna": self.comuna,
+                "sector": self.sector,
+            }
+            missing_fields = [field for field, value in required_fields.items() if not value]
+            if missing_fields:
+                raise ValidationError(
+                    {
+                        field: "Este campo es obligatorio para envios."
+                        for field in missing_fields
+                    }
+                )
+
+        if self.tipo_entrega == self.TipoEntrega.RETIRO:
+            self.es_envio_express = False
+
+    def save(self, *args, **kwargs):
+        if not self.tracking_token:
+            self.tracking_token = build_unique_tracking_token()
+            while Pedido.objects.filter(tracking_token=self.tracking_token).exists():
+                self.tracking_token = build_unique_tracking_token()
+
+        should_generate_qr = not self.qr_code
+        super().save(*args, **kwargs)
+
+        if should_generate_qr:
+            self.generate_qr_code(save=True)
+
+    def get_tracking_url(self):
+        return reverse("order_tracking", kwargs={"token": self.tracking_token})
+
+    def recalculate_total(self, save=True):
+        order_total = sum((detalle.subtotal() for detalle in self.detalles.all()), Decimal("0.00"))
+        self.total = order_total.quantize(Decimal("0.01"))
+        if save:
+            self.save(update_fields=["total", "updated_at"])
+        return self.total
+
+    def generate_qr_code(self, save=True):
+        payload = f"pedido:{self.codigo}\ntracking:{self.tracking_token}"
+        qr_img = qrcode.make(payload)
+        buffer = BytesIO()
+        qr_img.save(buffer, format="PNG")
+        file_name = f"pedido-{self.codigo}.png"
+        self.qr_code.save(file_name, ContentFile(buffer.getvalue()), save=False)
+        if save:
+            super().save(update_fields=["qr_code", "updated_at"])
 
 
 class DetallePedido(models.Model):

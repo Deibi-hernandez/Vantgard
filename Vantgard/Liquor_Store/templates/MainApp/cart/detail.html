@@ -1,0 +1,53 @@
+{% extends "MainApp/base.html" %}
+
+{% block title %}Carrito | Vantgard{% endblock %}
+
+{% block content %}
+<main class="container py-4">
+    <h1>Tu carrito</h1>
+    {% if items %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Subtotal</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        <tr>
+                            <td>{{ item.product.nombre }}</td>
+                            <td>
+                                <form method="post" action="{% url 'cart_update' item.product.id %}" class="d-flex gap-2">
+                                    {% csrf_token %}
+                                    <input type="number" min="1" max="{{ item.product.stock }}" name="quantity" value="{{ item.quantity }}" class="form-control" style="max-width: 90px;">
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary">Actualizar</button>
+                                </form>
+                            </td>
+                            <td>$ {{ item.unit_price|floatformat:0 }}</td>
+                            <td>$ {{ item.subtotal|floatformat:0 }}</td>
+                            <td>
+                                <form method="post" action="{% url 'cart_remove' item.product.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Quitar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+            <strong>Total: $ {{ total|floatformat:0 }}</strong>
+            <a class="btn btn-primary" href="{% url 'checkout' %}">Ir a checkout</a>
+        </div>
+    {% else %}
+        <p>No hay productos en el carrito.</p>
+        <a class="btn btn-primary" href="{% url 'product_list' %}">Ver productos</a>
+    {% endif %}
+</main>
+{% endblock %}

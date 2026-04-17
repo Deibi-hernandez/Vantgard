@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import CustomUser
+from .models import CustomUser, Pedido
 
 
 class CustomerRegistrationForm(UserCreationForm):
@@ -39,3 +39,34 @@ class CustomerRegistrationForm(UserCreationForm):
             user.save()
 
         return user
+
+
+class CartAddForm(forms.Form):
+    quantity = forms.IntegerField(min_value=1, initial=1)
+
+
+class CartUpdateForm(forms.Form):
+    quantity = forms.IntegerField(min_value=1)
+
+
+class CheckoutForm(forms.Form):
+    tipo_entrega = forms.ChoiceField(choices=Pedido.TipoEntrega.choices)
+    metodo_pago = forms.ChoiceField(choices=Pedido.MetodoPago.choices)
+    direccion = forms.CharField(max_length=255, required=False)
+    comuna = forms.CharField(max_length=80, required=False)
+    sector = forms.CharField(max_length=80, required=False)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        tipo_entrega = cleaned_data.get("tipo_entrega")
+
+        if tipo_entrega != Pedido.TipoEntrega.RETIRO:
+            missing_fields = [
+                field_name
+                for field_name in ("direccion", "comuna", "sector")
+                if not cleaned_data.get(field_name)
+            ]
+            for field in missing_fields:
+                self.add_error(field, "Este campo es obligatorio para envios.")
+
+        return cleaned_data

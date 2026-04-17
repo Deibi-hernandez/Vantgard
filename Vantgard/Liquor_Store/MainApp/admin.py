@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.db.models import Count
+from django.utils.html import format_html
 
 from .models import Blog, CustomUser, DetallePedido, GiftExperience, Pedido, Producto
 
@@ -46,6 +48,7 @@ class ProductoAdmin(admin.ModelAdmin):
     readonly_fields = ("contador_ventas", "created_at", "updated_at")
     list_editable = ("stock", "activo", "is_offer")
     date_hierarchy = "created_at"
+    actions = ("mark_as_inactive",)
 
     @admin.display(description="Precio final")
     def precio_final_display(self, obj):
@@ -58,6 +61,10 @@ class ProductoAdmin(admin.ModelAdmin):
         if obj.stock < 3:
             return "Critico"
         return "Disponible"
+
+    @admin.action(description="Desactivar productos seleccionados")
+    def mark_as_inactive(self, request, queryset):
+        queryset.update(activo=False)
 
 
 class DetallePedidoInline(admin.TabularInline):
@@ -85,26 +92,61 @@ class DetallePedidoInline(admin.TabularInline):
 class PedidoAdmin(admin.ModelAdmin):
     list_display = (
         "codigo",
+        "tracking_token",
         "usuario",
         "estado_pedido",
+        "estado_pago",
+        "metodo_pago",
         "tipo_entrega",
         "es_envio_express",
         "total",
+        "detalles_count",
         "created_at",
     )
-    list_filter = ("estado_pedido", "tipo_entrega", "es_envio_express", "created_at")
+    list_filter = ("estado_pedido", "estado_pago", "metodo_pago", "tipo_entrega", "es_envio_express", "created_at")
     search_fields = (
         "codigo",
+        "tracking_token",
         "usuario__username",
         "usuario__email",
         "direccion",
         "comuna",
         "sector",
+        "referencia_pago",
     )
     autocomplete_fields = ("usuario", "gift_experience")
-    readonly_fields = ("codigo", "created_at", "updated_at")
+    readonly_fields = ("codigo", "tracking_token", "created_at", "updated_at", "qr_preview")
     inlines = (DetallePedidoInline,)
     date_hierarchy = "created_at"
+    actions = ("mark_as_preparando", "mark_as_enviado", "mark_as_entregado")
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.annotate(
+            details_total=Count("detalles"),
+        )
+
+    @admin.display(description="Items")
+    def detalles_count(self, obj):
+        return obj.details_total
+
+    @admin.display(description="QR")
+    def qr_preview(self, obj):
+        if not obj.qr_code:
+            return "-"
+        return format_html('<img src="{}" width="90" height="90" alt="QR pedido">', obj.qr_code.url)
+
+    @admin.action(description="Marcar como preparando")
+    def mark_as_preparando(self, request, queryset):
+        queryset.update(estado_pedido=Pedido.EstadoPedido.PREPARANDO)
+
+    @admin.action(description="Marcar como enviado")
+    def mark_as_enviado(self, request, queryset):
+        queryset.update(estado_pedido=Pedido.EstadoPedido.ENVIADO)
+
+    @admin.action(description="Marcar como entregado")
+    def mark_as_entregado(self, request, queryset):
+        queryset.update(estado_pedido=Pedido.EstadoPedido.ENTREGADO)
 
 
 @admin.register(DetallePedido)

@@ -1,0 +1,20 @@
+{% extends "MainApp/base.html" %}
+
+{% block title %}Tracking pedido | Vantgard{% endblock %}
+
+{% block content %}
+<main class="container py-4">
+    <h1>Tracking de pedido</h1>
+    <p><strong>Token:</strong> {{ order.tracking_token }}</p>
+    <p><strong>Código:</strong> {{ order.codigo }}</p>
+    <p><strong>Estado pedido:</strong> {{ order.get_estado_pedido_display }}</p>
+    <p><strong>Estado pago:</strong> {{ order.get_estado_pago_display }}</p>
+    <p><strong>Última actualización:</strong> {{ order.updated_at }}</p>
+    <h2>Detalle</h2>
+    <ul>
+        {% for detail in order.detalles.all %}
+            <li>{{ detail.cantidad }} x {{ detail.producto.nombre }} - $ {{ detail.subtotal|floatformat:0 }}</li>
+        {% endfor %}
+    </ul>
+</main>
+{% endblock %}
