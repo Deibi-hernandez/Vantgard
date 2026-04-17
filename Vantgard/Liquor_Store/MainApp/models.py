@@ -37,6 +37,12 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.get_full_name() or self.username
 
+    def save(self, *args, **kwargs):
+        if self.is_superuser:
+            self.is_staff = True
+            self.role = self.Role.ADMIN
+        super().save(*args, **kwargs)
+
 
 class Producto(models.Model):
     nombre = models.CharField(max_length=160)

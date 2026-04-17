@@ -1,163 +1,139 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="es-cl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vantgard | Tienda de licores</title>
-    <link rel="stylesheet" href="{% static 'MainApp/css/store.css' %}">
-</head>
-<body>
-    <header class="site-header">
-        <a class="brand" href="{% url 'home' %}">Vantgard</a>
-        <nav class="site-nav" aria-label="Principal">
-            <a href="#catalogo">Catalogo</a>
-            <a href="#seleccion">Seleccion</a>
-            <a href="#contacto">Contacto</a>
-            {% if user.is_authenticated %}
-                <a href="{% url 'account' %}">Mi cuenta</a>
-                <form class="nav-form" action="{% url 'logout' %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit">Salir</button>
-                </form>
-            {% else %}
-                <a href="{% url 'login' %}">Entrar</a>
-                <a href="{% url 'register' %}">Registro</a>
-            {% endif %}
-        </nav>
-    </header>
+{% extends "MainApp/base.html" %}
 
-    <main>
-        <section class="shop-floor" id="catalogo">
-            <div class="shop-intro">
-                <p class="eyebrow">Antofagasta &middot; Curaduria liquida</p>
-                <h1>Destilados, vinos y packs premium listos para brindar.</h1>
-                <p class="intro-copy">
-                    Etiquetas elegidas para cenas, regalos y barras personales con caracter.
-                </p>
-                <div class="shop-actions" aria-label="Acciones de compra">
-                    <a class="button button-primary" href="#productos">Ver productos</a>
-                    <a class="button button-secondary" href="#contacto">Reservar pedido</a>
+{% block title %}Vantgard | Licores premium en Antofagasta{% endblock %}
+
+{% block content %}
+<main>
+    <section class="shop-floor" id="catalogo">
+        <div class="container">
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-7">
+                    <p class="eyebrow">Antofagasta &middot; Curaduria liquida</p>
+                    <h1>Destilados, vinos y regalos premium listos para brindar.</h1>
+                    <p class="intro-copy">
+                        Etiquetas elegidas para cenas, regalos y barras personales con caracter.
+                    </p>
+                    <div class="shop-actions" aria-label="Acciones de compra">
+                        <a class="button button-primary" href="{% url 'product_list' %}">Ver productos</a>
+                        <a class="button button-secondary" href="#contacto">Reservar pedido</a>
+                    </div>
+                    <div class="service-strip" aria-label="Servicios destacados">
+                        <span>Retiro en tienda</span>
+                        <span>Despacho local</span>
+                        <span>Asesoria para regalos</span>
+                    </div>
                 </div>
-                <div class="service-strip" aria-label="Servicios destacados">
-                    <span>Retiro en tienda</span>
-                    <span>Despacho local</span>
-                    <span>Asesoria para regalos</span>
+                <div class="col-lg-5">
+                    <aside class="feature-panel" aria-label="Producto recomendado">
+                        <img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1400&q=80" alt="Barra iluminada con botellas premium">
+                        <div class="feature-copy">
+                            <span>Reserva destacada</span>
+                            <strong>Whisky de malta privada</strong>
+                            <p>Notas de vainilla, roble tostado y especias suaves.</p>
+                        </div>
+                    </aside>
                 </div>
             </div>
-
-            <aside class="feature-panel" aria-label="Producto recomendado">
-                <img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1400&q=80" alt="Barra iluminada con botellas premium">
-                <div class="feature-copy">
-                    <span>Reserva destacada</span>
-                    <strong>Whisky de malta privada</strong>
-                    <p>Notas de vainilla, roble tostado y especias suaves.</p>
-                </div>
-            </aside>
-        </section>
-
-        <section class="category-band" id="seleccion" aria-label="Categorias de tienda">
-            <a href="#whisky">Whisky</a>
-            <a href="#gin">Gin</a>
-            <a href="#ron">Ron</a>
-            <a href="#vino">Vinos</a>
-            <a href="#packs">Packs</a>
-        </section>
-
-        <section class="products-section" id="productos">
-            <div class="section-heading">
-                <p class="eyebrow">Botellas en vitrina</p>
-                <h2>Seleccion para paladares exigentes.</h2>
-            </div>
-
-            <div class="product-grid">
-                <article class="product-card" id="whisky">
-                    <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=900&q=80" alt="Botellas de whisky en cava">
-                    <div class="product-content">
-                        <span class="tag">Whisky</span>
-                        <h3>Vantgard Reserve</h3>
-                        <p>Malta intensa, roble frances y final largo.</p>
-                        <div class="product-footer">
-                            <strong>$58.900</strong>
-                            <button type="button">Agregar</button>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="product-card" id="gin">
-                    <img src="https://images.unsplash.com/photo-1569529465841-dfecdab7503b?auto=format&fit=crop&w=900&q=80" alt="Botella premium con copa servida">
-                    <div class="product-content">
-                        <span class="tag">Gin</span>
-                        <h3>Austral Botanico</h3>
-                        <p>Enebro, citricos del sur y hierbas frescas.</p>
-                        <div class="product-footer">
-                            <strong>$34.900</strong>
-                            <button type="button">Agregar</button>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="product-card" id="ron">
-                    <img src="https://images.unsplash.com/photo-1527281400683-1aae777175f8?auto=format&fit=crop&w=900&q=80" alt="Vasos de licor servidos en barra">
-                    <div class="product-content">
-                        <span class="tag">Ron</span>
-                        <h3>Gran Barrica 12</h3>
-                        <p>Caramelo oscuro, cacao y madera especiada.</p>
-                        <div class="product-footer">
-                            <strong>$42.900</strong>
-                            <button type="button">Agregar</button>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="product-card" id="vino">
-                    <img src="https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=900&q=80" alt="Botella de vino tinto junto a copas">
-                    <div class="product-content">
-                        <span class="tag">Vino</span>
-                        <h3>Carmenere Gran Valle</h3>
-                        <p>Fruta roja madura, pimienta y taninos suaves.</p>
-                        <div class="product-footer">
-                            <strong>$18.900</strong>
-                            <button type="button">Agregar</button>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="product-card">
-                    <img src="https://images.unsplash.com/photo-1607622750671-6cd9a99eabd1?auto=format&fit=crop&w=900&q=80" alt="Copas de espumante servidas">
-                    <div class="product-content">
-                        <span class="tag">Espumante</span>
-                        <h3>Brut Andes</h3>
-                        <p>Burbujas finas, manzana verde y final seco.</p>
-                        <div class="product-footer">
-                            <strong>$24.900</strong>
-                            <button type="button">Agregar</button>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="product-card" id="packs">
-                    <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=900&q=80" alt="Coctel servido con citricos">
-                    <div class="product-content">
-                        <span class="tag">Pack</span>
-                        <h3>Cocteleria de Autor</h3>
-                        <p>Base premium, mixer artesanal y garnish seco.</p>
-                        <div class="product-footer">
-                            <strong>$29.900</strong>
-                            <button type="button">Agregar</button>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </section>
-    </main>
-
-    <footer class="site-footer" id="contacto">
-        <div>
-            <strong>Vantgard</strong>
-            <p>Antofagasta, Chile &middot; Venta solo para mayores de 18 a&ntilde;os.</p>
         </div>
-        <a href="mailto:pedidos@vantgard.cl">pedidos@vantgard.cl</a>
-    </footer>
-</body>
-</html>
+    </section>
+
+    <section class="category-band" id="seleccion" aria-label="Categorias de tienda">
+        <a href="{% url 'product_list' %}">Whisky</a>
+        <a href="{% url 'product_list' %}">Gin</a>
+        <a href="{% url 'product_list' %}">Ron</a>
+        <a href="{% url 'product_list' %}">Vinos</a>
+        <a href="{% url 'product_list' %}">Packs</a>
+    </section>
+
+    <section class="products-section">
+        <div class="container">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Botellas en vitrina</p>
+                    <h2>Seleccion para paladares exigentes.</h2>
+                </div>
+                <a class="text-link" href="{% url 'product_list' %}">Explorar catalogo</a>
+            </div>
+
+            {% if productos_destacados %}
+                <div class="product-grid">
+                    {% for producto in productos_destacados %}
+                        {% include "MainApp/partials/product_card.html" with producto=producto %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <p class="eyebrow">Catalogo en preparacion</p>
+                    <h3>Agrega productos desde el admin para mostrar la seleccion premium.</h3>
+                    {% if user.is_staff %}
+                        <a class="button button-primary" href="{% url 'admin:MainApp_producto_add' %}">Crear producto</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    {% if ofertas %}
+        <section class="dark-section">
+            <div class="container">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">Ofertas destacadas</p>
+                        <h2>Etiquetas premium con valor especial.</h2>
+                    </div>
+                </div>
+                <div class="product-grid">
+                    {% for producto in ofertas %}
+                        {% include "MainApp/partials/product_card.html" with producto=producto %}
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+    {% if mas_comprados %}
+        <section class="products-section">
+            <div class="container">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">Mas comprados</p>
+                        <h2>Los favoritos de la cava.</h2>
+                    </div>
+                </div>
+                <div class="product-grid">
+                    {% for producto in mas_comprados %}
+                        {% include "MainApp/partials/product_card.html" with producto=producto %}
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+    {% if ultimas_notas %}
+        <section class="journal-section">
+            <div class="container">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">Notas de cata</p>
+                        <h2>Lecturas breves para elegir mejor.</h2>
+                    </div>
+                </div>
+                <div class="journal-grid">
+                    {% for nota in ultimas_notas %}
+                        <article class="journal-card">
+                            {% if nota.imagen %}
+                                <img src="{{ nota.imagen.url }}" alt="{{ nota.titulo }}">
+                            {% endif %}
+                            <div>
+                                <span>{{ nota.created_at|date:"d M Y" }}</span>
+                                <h3>{{ nota.titulo }}</h3>
+                                <p>{{ nota.contenido|truncatewords:22 }}</p>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+</main>
+{% endblock %}

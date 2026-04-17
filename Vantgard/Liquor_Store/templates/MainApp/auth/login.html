@@ -1,46 +1,33 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="es-cl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entrar | Vantgard</title>
-    <link rel="stylesheet" href="{% static 'MainApp/css/store.css' %}">
-</head>
-<body class="auth-page">
-    <header class="site-header">
-        <a class="brand" href="{% url 'home' %}">Vantgard</a>
-        <nav class="site-nav" aria-label="Principal">
-            <a href="{% url 'home' %}">Inicio</a>
-            <a href="{% url 'register' %}">Registro</a>
-        </nav>
-    </header>
+{% extends "MainApp/base.html" %}
 
-    <main class="auth-shell">
-        <section class="auth-panel" aria-labelledby="login-title">
-            <p class="eyebrow">Acceso privado</p>
-            <h1 id="login-title">Entra a tu cava Vantgard.</h1>
-            <p class="auth-copy">Gestiona tus pedidos, reservas y experiencias premium desde una cuenta segura.</p>
+{% block title %}Entrar | Vantgard{% endblock %}
+{% block body_class %}auth-page{% endblock %}
 
-            <form method="post" class="auth-form" novalidate>
-                {% csrf_token %}
-                {% if form.non_field_errors %}
-                    <div class="form-errors">{{ form.non_field_errors }}</div>
-                {% endif %}
+{% block content %}
+<main class="auth-shell">
+    <section class="auth-panel" aria-labelledby="login-title">
+        <p class="eyebrow">Acceso privado</p>
+        <h1 id="login-title">Entra a tu cava Vantgard.</h1>
+        <p class="auth-copy">Gestiona tus pedidos, reservas y experiencias premium desde una cuenta segura.</p>
 
-                <label for="{{ form.username.id_for_label }}">Usuario</label>
-                {{ form.username }}
-                {{ form.username.errors }}
+        <form method="post" class="auth-form" novalidate>
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="form-errors">{{ form.non_field_errors }}</div>
+            {% endif %}
 
-                <label for="{{ form.password.id_for_label }}">Contrasena</label>
-                {{ form.password }}
-                {{ form.password.errors }}
+            <label for="{{ form.username.id_for_label }}">Usuario</label>
+            {{ form.username }}
+            {{ form.username.errors }}
 
-                <button type="submit">Entrar</button>
-            </form>
+            <label for="{{ form.password.id_for_label }}">Contrasena</label>
+            {{ form.password }}
+            {{ form.password.errors }}
 
-            <p class="auth-link">Aun no tienes cuenta? <a href="{% url 'register' %}">Crear cuenta cliente</a></p>
-        </section>
-    </main>
-</body>
-</html>
+            <button type="submit">Entrar</button>
+        </form>
+
+        <p class="auth-link">Aun no tienes cuenta? <a href="{% url 'register' %}">Crear cuenta cliente</a></p>
+    </section>
+</main>
+{% endblock %}

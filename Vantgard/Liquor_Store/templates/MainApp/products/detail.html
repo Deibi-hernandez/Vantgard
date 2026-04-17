@@ -1,0 +1,90 @@
+{% extends "MainApp/base.html" %}
+
+{% block title %}{{ producto.nombre }} | Vantgard{% endblock %}
+
+{% block content %}
+<main class="product-detail-page">
+    <section class="product-detail">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-6">
+                    <div class="product-media">
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                        {% else %}
+                            <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1200&q=80" alt="Botellas premium en cava">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <p class="eyebrow">Ficha de producto</p>
+                    <h1>{{ producto.nombre }}</h1>
+                    <div class="product-tags detail-tags">
+                        {% if producto.is_offer %}
+                            <span class="tag">Oferta -{{ producto.discount_percent }}%</span>
+                        {% endif %}
+                        {% if producto.is_limited_edition %}
+                            <span class="tag tag-dark">Edicion limitada</span>
+                        {% endif %}
+                        {% if producto.volumen %}
+                            <span class="tag tag-muted">{{ producto.volumen }}</span>
+                        {% endif %}
+                    </div>
+                    <p class="detail-copy">{{ producto.descripcion }}</p>
+
+                    <div class="detail-price">
+                        {% if producto.is_offer %}
+                            <small>$ {{ producto.precio|floatformat:0 }}</small>
+                        {% endif %}
+                        <strong>$ {{ producto.precio_final|floatformat:0 }}</strong>
+                    </div>
+
+                    <dl class="tech-list">
+                        <div>
+                            <dt>Stock</dt>
+                            <dd>
+                                {% if producto.stock > 0 %}
+                                    {{ producto.stock }} unidades
+                                {% else %}
+                                    Agotado
+                                {% endif %}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt>Ventas</dt>
+                            <dd>{{ producto.contador_ventas }}</dd>
+                        </div>
+                        <div>
+                            <dt>Estado</dt>
+                            <dd>{% if producto.activo %}Disponible{% else %}No disponible{% endif %}</dd>
+                        </div>
+                    </dl>
+
+                    <div class="shop-actions">
+                        <button type="button" {% if producto.stock == 0 %}disabled{% endif %}>Agregar al carrito</button>
+                        <a class="button button-secondary" href="{% url 'product_list' %}">Volver al catalogo</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if relacionados %}
+        <section class="products-section">
+            <div class="container">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">Tambien podria gustarte</p>
+                        <h2>Mas etiquetas para revisar.</h2>
+                    </div>
+                </div>
+                <div class="product-grid">
+                    {% for producto in relacionados %}
+                        {% include "MainApp/partials/product_card.html" with producto=producto %}
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+</main>
+{% endblock %}

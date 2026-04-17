@@ -1,47 +1,34 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="es-cl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro | Vantgard</title>
-    <link rel="stylesheet" href="{% static 'MainApp/css/store.css' %}">
-</head>
-<body class="auth-page">
-    <header class="site-header">
-        <a class="brand" href="{% url 'home' %}">Vantgard</a>
-        <nav class="site-nav" aria-label="Principal">
-            <a href="{% url 'home' %}">Inicio</a>
-            <a href="{% url 'login' %}">Entrar</a>
-        </nav>
-    </header>
+{% extends "MainApp/base.html" %}
 
-    <main class="auth-shell">
-        <section class="auth-panel" aria-labelledby="register-title">
-            <p class="eyebrow">Cliente Vantgard</p>
-            <h1 id="register-title">Crea tu acceso premium.</h1>
-            <p class="auth-copy">Reserva etiquetas, prepara regalos y recibe atencion local en Antofagasta.</p>
+{% block title %}Registro | Vantgard{% endblock %}
+{% block body_class %}auth-page{% endblock %}
 
-            <form method="post" class="auth-form" novalidate>
-                {% csrf_token %}
-                {% if form.non_field_errors %}
-                    <div class="form-errors">{{ form.non_field_errors }}</div>
+{% block content %}
+<main class="auth-shell">
+    <section class="auth-panel" aria-labelledby="register-title">
+        <p class="eyebrow">Cliente Vantgard</p>
+        <h1 id="register-title">Crea tu acceso premium.</h1>
+        <p class="auth-copy">Reserva etiquetas, prepara regalos y recibe atencion local en Antofagasta.</p>
+
+        <form method="post" class="auth-form" novalidate>
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="form-errors">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            {% for field in form %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
                 {% endif %}
+                {{ field.errors }}
+            {% endfor %}
 
-                {% for field in form %}
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.help_text %}
-                        <small>{{ field.help_text }}</small>
-                    {% endif %}
-                    {{ field.errors }}
-                {% endfor %}
+            <button type="submit">Crear cuenta</button>
+        </form>
 
-                <button type="submit">Crear cuenta</button>
-            </form>
-
-            <p class="auth-link">Ya tienes cuenta? <a href="{% url 'login' %}">Entrar</a></p>
-        </section>
-    </main>
-</body>
-</html>
+        <p class="auth-link">Ya tienes cuenta? <a href="{% url 'login' %}">Entrar</a></p>
+    </section>
+</main>
+{% endblock %}

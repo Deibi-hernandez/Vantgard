@@ -13,9 +13,10 @@ class CustomUserAdmin(UserAdmin):
         "last_name",
         "role",
         "is_staff",
+        "is_superuser",
         "is_active",
     )
-    list_filter = ("role", "is_staff", "is_active", "groups")
+    list_filter = ("role", "is_staff", "is_superuser", "is_active", "groups")
     search_fields = ("username", "email", "first_name", "last_name")
     ordering = ("username",)
     fieldsets = UserAdmin.fieldsets + (

@@ -1,0 +1,33 @@
+<article class="product-card">
+    <a href="{{ producto.get_absolute_url }}" aria-label="Ver {{ producto.nombre }}">
+        {% if producto.imagen %}
+            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+        {% else %}
+            <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=900&q=80" alt="Botellas premium en cava">
+        {% endif %}
+    </a>
+    <div class="product-content">
+        <div class="product-tags">
+            {% if producto.is_offer %}
+                <span class="tag">-{{ producto.discount_percent }}%</span>
+            {% endif %}
+            {% if producto.is_limited_edition %}
+                <span class="tag tag-dark">Edicion limitada</span>
+            {% endif %}
+            {% if producto.volumen %}
+                <span class="tag tag-muted">{{ producto.volumen }}</span>
+            {% endif %}
+        </div>
+        <h3><a href="{{ producto.get_absolute_url }}">{{ producto.nombre }}</a></h3>
+        <p>{{ producto.descripcion|truncatewords:18 }}</p>
+        <div class="product-footer">
+            <div>
+                {% if producto.is_offer %}
+                    <small class="old-price">$ {{ producto.precio|floatformat:0 }}</small>
+                {% endif %}
+                <strong>$ {{ producto.precio_final|floatformat:0 }}</strong>
+            </div>
+            <a class="button button-small" href="{{ producto.get_absolute_url }}">Ver</a>
+        </div>
+    </div>
+</article>

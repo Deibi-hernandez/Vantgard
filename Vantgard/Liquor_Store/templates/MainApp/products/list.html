@@ -1,0 +1,42 @@
+{% extends "MainApp/base.html" %}
+
+{% block title %}Catalogo | Vantgard{% endblock %}
+
+{% block content %}
+<main class="catalog-page">
+    <section class="page-hero compact-hero">
+        <div class="container">
+            <p class="eyebrow">Catalogo premium</p>
+            <h1>Botellas seleccionadas para regalar, celebrar y coleccionar.</h1>
+            <p>Compra local en Antofagasta con una seleccion sobria, precisa y lista para ocasiones especiales.</p>
+        </div>
+    </section>
+
+    <section class="products-section">
+        <div class="container">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Productos disponibles</p>
+                    <h2>{{ productos|length }} etiquetas activas.</h2>
+                </div>
+            </div>
+
+            {% if productos %}
+                <div class="product-grid">
+                    {% for producto in productos %}
+                        {% include "MainApp/partials/product_card.html" with producto=producto %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <p class="eyebrow">Sin productos activos</p>
+                    <h3>El catalogo se alimenta desde el admin de Django.</h3>
+                    {% if user.is_staff %}
+                        <a class="button button-primary" href="{% url 'admin:MainApp_producto_add' %}">Crear producto</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+</main>
+{% endblock %}
