@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es-cl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vantgard | Tienda de licores</title>
+    <link rel="stylesheet" href="{% static 'MainApp/css/store.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="{% url 'home' %}">Vantgard</a>
+        <nav class="site-nav" aria-label="Principal">
+            <a href="#catalogo">Catalogo</a>
+            <a href="#seleccion">Seleccion</a>
+            <a href="#contacto">Contacto</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="shop-floor" id="catalogo">
+            <div class="shop-intro">
+                <p class="eyebrow">Antofagasta &middot; Curaduria liquida</p>
+                <h1>Destilados, vinos y packs premium listos para brindar.</h1>
+                <p class="intro-copy">
+                    Etiquetas elegidas para cenas, regalos y barras personales con caracter.
+                </p>
+                <div class="shop-actions" aria-label="Acciones de compra">
+                    <a class="button button-primary" href="#productos">Ver productos</a>
+                    <a class="button button-secondary" href="#contacto">Reservar pedido</a>
+                </div>
+                <div class="service-strip" aria-label="Servicios destacados">
+                    <span>Retiro en tienda</span>
+                    <span>Despacho local</span>
+                    <span>Asesoria para regalos</span>
+                </div>
+            </div>
+
+            <aside class="feature-panel" aria-label="Producto recomendado">
+                <img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1400&q=80" alt="Barra iluminada con botellas premium">
+                <div class="feature-copy">
+                    <span>Reserva destacada</span>
+                    <strong>Whisky de malta privada</strong>
+                    <p>Notas de vainilla, roble tostado y especias suaves.</p>
+                </div>
+            </aside>
+        </section>
+
+        <section class="category-band" id="seleccion" aria-label="Categorias de tienda">
+            <a href="#whisky">Whisky</a>
+            <a href="#gin">Gin</a>
+            <a href="#ron">Ron</a>
+            <a href="#vino">Vinos</a>
+            <a href="#packs">Packs</a>
+        </section>
+
+        <section class="products-section" id="productos">
+            <div class="section-heading">
+                <p class="eyebrow">Botellas en vitrina</p>
+                <h2>Seleccion para paladares exigentes.</h2>
+            </div>
+
+            <div class="product-grid">
+                <article class="product-card" id="whisky">
+                    <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=900&q=80" alt="Botellas de whisky en cava">
+                    <div class="product-content">
+                        <span class="tag">Whisky</span>
+                        <h3>Vantgard Reserve</h3>
+                        <p>Malta intensa, roble frances y final largo.</p>
+                        <div class="product-footer">
+                            <strong>$58.900</strong>
+                            <button type="button">Agregar</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="product-card" id="gin">
+                    <img src="https://images.unsplash.com/photo-1569529465841-dfecdab7503b?auto=format&fit=crop&w=900&q=80" alt="Botella premium con copa servida">
+                    <div class="product-content">
+                        <span class="tag">Gin</span>
+                        <h3>Austral Botanico</h3>
+                        <p>Enebro, citricos del sur y hierbas frescas.</p>
+                        <div class="product-footer">
+                            <strong>$34.900</strong>
+                            <button type="button">Agregar</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="product-card" id="ron">
+                    <img src="https://images.unsplash.com/photo-1527281400683-1aae777175f8?auto=format&fit=crop&w=900&q=80" alt="Vasos de licor servidos en barra">
+                    <div class="product-content">
+                        <span class="tag">Ron</span>
+                        <h3>Gran Barrica 12</h3>
+                        <p>Caramelo oscuro, cacao y madera especiada.</p>
+                        <div class="product-footer">
+                            <strong>$42.900</strong>
+                            <button type="button">Agregar</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="product-card" id="vino">
+                    <img src="https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=900&q=80" alt="Botella de vino tinto junto a copas">
+                    <div class="product-content">
+                        <span class="tag">Vino</span>
+                        <h3>Carmenere Gran Valle</h3>
+                        <p>Fruta roja madura, pimienta y taninos suaves.</p>
+                        <div class="product-footer">
+                            <strong>$18.900</strong>
+                            <button type="button">Agregar</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <img src="https://images.unsplash.com/photo-1607622750671-6cd9a99eabd1?auto=format&fit=crop&w=900&q=80" alt="Copas de espumante servidas">
+                    <div class="product-content">
+                        <span class="tag">Espumante</span>
+                        <h3>Brut Andes</h3>
+                        <p>Burbujas finas, manzana verde y final seco.</p>
+                        <div class="product-footer">
+                            <strong>$24.900</strong>
+                            <button type="button">Agregar</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="product-card" id="packs">
+                    <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=900&q=80" alt="Coctel servido con citricos">
+                    <div class="product-content">
+                        <span class="tag">Pack</span>
+                        <h3>Cocteleria de Autor</h3>
+                        <p>Base premium, mixer artesanal y garnish seco.</p>
+                        <div class="product-footer">
+                            <strong>$29.900</strong>
+                            <button type="button">Agregar</button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer" id="contacto">
+        <div>
+            <strong>Vantgard</strong>
+            <p>Antofagasta, Chile &middot; Venta solo para mayores de 18 a&ntilde;os.</p>
+        </div>
+        <a href="mailto:pedidos@vantgard.cl">pedidos@vantgard.cl</a>
+    </footer>
+</body>
+</html>
