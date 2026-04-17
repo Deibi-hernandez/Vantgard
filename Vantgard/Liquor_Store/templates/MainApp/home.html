@@ -14,6 +14,16 @@
             <a href="#catalogo">Catalogo</a>
             <a href="#seleccion">Seleccion</a>
             <a href="#contacto">Contacto</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'account' %}">Mi cuenta</a>
+                <form class="nav-form" action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Salir</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Entrar</a>
+                <a href="{% url 'register' %}">Registro</a>
+            {% endif %}
         </nav>
     </header>
 

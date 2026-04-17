@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es-cl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi cuenta | Vantgard</title>
+    <link rel="stylesheet" href="{% static 'MainApp/css/store.css' %}">
+</head>
+<body class="auth-page">
+    <header class="site-header">
+        <a class="brand" href="{% url 'home' %}">Vantgard</a>
+        <nav class="site-nav" aria-label="Principal">
+            <a href="{% url 'home' %}">Inicio</a>
+            {% if user.is_staff %}
+                <a href="{% url 'admin:index' %}">Admin</a>
+            {% endif %}
+            <form class="nav-form" action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Salir</button>
+            </form>
+        </nav>
+    </header>
+
+    <main class="account-shell">
+        <section class="account-hero">
+            <p class="eyebrow">Cuenta activa</p>
+            <h1>Bienvenido, {{ user.get_full_name|default:user.username }}.</h1>
+            <p>Tu perfil ya esta listo para comprar, reservar y gestionar proximos pedidos.</p>
+        </section>
+
+        <section class="account-grid" aria-label="Resumen de cuenta">
+            <article>
+                <span>Rol</span>
+                <strong>{{ user.get_role_display }}</strong>
+            </article>
+            <article>
+                <span>Correo</span>
+                <strong>{{ user.email|default:"Sin correo registrado" }}</strong>
+            </article>
+            <article>
+                <span>Pedidos</span>
+                <strong>{{ user.pedidos.count }}</strong>
+            </article>
+        </section>
+    </main>
+</body>
+</html>

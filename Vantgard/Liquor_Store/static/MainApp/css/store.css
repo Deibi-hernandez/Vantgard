@@ -165,10 +165,33 @@ button {
     cursor: pointer;
 }
 
+.nav-form {
+    margin: 0;
+}
+
+.nav-form button {
+    min-height: auto;
+    padding: 8px 0;
+    color: inherit;
+    background: transparent;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+}
+
+.nav-form button:hover,
+.nav-form button:focus-visible {
+    border-color: var(--brass);
+}
+
 .button-primary,
-button {
+body button {
     color: var(--ink);
     background: var(--brass);
+}
+
+.site-nav .nav-form button {
+    color: inherit;
+    background: transparent;
 }
 
 .button-secondary {
@@ -376,6 +399,125 @@ button {
     font-weight: 800;
 }
 
+.auth-page {
+    min-height: 100vh;
+    color: var(--white);
+    background: var(--ink);
+}
+
+.auth-shell,
+.account-shell {
+    width: min(1120px, 90%);
+    margin: 0 auto;
+    padding: 64px 0 84px;
+}
+
+.auth-panel {
+    max-width: 560px;
+    padding: 34px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+}
+
+.auth-panel h1,
+.account-hero h1 {
+    margin: 0;
+    font-size: 2.7rem;
+    line-height: 1.05;
+}
+
+.auth-copy,
+.auth-link,
+.account-hero p {
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.65;
+}
+
+.auth-form {
+    display: grid;
+    gap: 10px;
+    margin-top: 26px;
+}
+
+.auth-form label {
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 0.92rem;
+    font-weight: 800;
+}
+
+.auth-form input,
+.auth-form textarea,
+.auth-form select {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 14px;
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 8px;
+    font: inherit;
+}
+
+.auth-form input:focus,
+.auth-form textarea:focus,
+.auth-form select:focus {
+    outline: 2px solid var(--brass);
+    outline-offset: 2px;
+}
+
+.auth-form small,
+.auth-form ul,
+.form-errors {
+    margin: 0;
+    color: #f0c8d2;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.auth-form button {
+    margin-top: 14px;
+}
+
+.auth-link a {
+    color: var(--brass);
+    font-weight: 800;
+}
+
+.account-hero {
+    max-width: 760px;
+}
+
+.account-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 34px;
+}
+
+.account-grid article {
+    padding: 22px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+}
+
+.account-grid span {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--brass);
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.account-grid strong {
+    display: block;
+    overflow-wrap: anywhere;
+    font-size: 1.16rem;
+}
+
 @media (max-width: 980px) {
     .shop-floor {
         grid-template-columns: 1fr;
@@ -398,6 +540,10 @@ button {
     .category-band {
         grid-template-columns: repeat(3, minmax(120px, 1fr));
     }
+
+    .account-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 680px) {
@@ -413,6 +559,7 @@ button {
         width: 100%;
         justify-content: space-between;
         gap: 8px;
+        flex-wrap: wrap;
     }
 
     .shop-floor {
@@ -441,5 +588,14 @@ button {
 
     .product-footer button {
         width: 100%;
+    }
+
+    .auth-panel {
+        padding: 24px;
+    }
+
+    .auth-panel h1,
+    .account-hero h1 {
+        font-size: 2.2rem;
     }
 }
