@@ -61,7 +61,11 @@
                     </dl>
 
                     <div class="shop-actions">
-                        <button type="button" {% if producto.stock == 0 %}disabled{% endif %}>Agregar al carrito</button>
+                        <form method="post" action="{% url 'cart_add' producto.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" {% if producto.stock == 0 %}disabled{% endif %}>Agregar al carrito</button>
+                        </form>
                         <a class="button button-secondary" href="{% url 'product_list' %}">Volver al catalogo</a>
                     </div>
                 </div>

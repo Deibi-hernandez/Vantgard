@@ -25,5 +25,23 @@
             <strong>{{ user.pedidos.count }}</strong>
         </article>
     </section>
+
+    <section class="account-hero mt-4">
+        <p class="eyebrow">Últimos pedidos</p>
+        {% if recent_orders %}
+            <ul>
+                {% for order in recent_orders %}
+                    <li>
+                        <strong>{{ order.codigo }}</strong> -
+                        {{ order.get_estado_pedido_display }} /
+                        {{ order.get_estado_pago_display }} -
+                        <a href="{% url 'order_tracking' order.tracking_token %}">Tracking</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tienes pedidos recientes.</p>
+        {% endif %}
+    </section>
 </main>
 {% endblock %}

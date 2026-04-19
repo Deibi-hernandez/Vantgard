@@ -1,0 +1,30 @@
+{% extends "MainApp/base.html" %}
+
+{% block title %}Checkout | Vantgard{% endblock %}
+
+{% block content %}
+<main class="container py-4">
+    <h1>Checkout</h1>
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <form method="post" class="card card-body">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Confirmar compra</button>
+            </form>
+        </div>
+        <div class="col-lg-5">
+            <div class="card card-body">
+                <h2>Resumen</h2>
+                <ul class="list-unstyled">
+                    {% for item in items %}
+                        <li class="mb-2">{{ item.quantity }} x {{ item.product.nombre }} - $ {{ item.subtotal|floatformat:0 }}</li>
+                    {% endfor %}
+                </ul>
+                <hr>
+                <strong>Total: $ {{ total|floatformat:0 }}</strong>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
