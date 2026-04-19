@@ -39,6 +39,7 @@
                     </li>
                 {% endfor %}
             </ul>
+            <a class="button button-secondary" href="{% url 'order_history' %}">Ver historial completo</a>
         {% else %}
             <p>No tienes pedidos recientes.</p>
         {% endif %}

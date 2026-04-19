@@ -38,11 +38,11 @@
     </section>
 
     <section class="category-band" id="seleccion" aria-label="Categorias de tienda">
-        <a href="{% url 'product_list' %}">Whisky</a>
-        <a href="{% url 'product_list' %}">Gin</a>
-        <a href="{% url 'product_list' %}">Ron</a>
-        <a href="{% url 'product_list' %}">Vinos</a>
-        <a href="{% url 'product_list' %}">Packs</a>
+        {% for categoria in categorias %}
+            <a href="{% url 'product_list' %}?categoria={{ categoria.slug }}">{{ categoria.nombre }}</a>
+        {% empty %}
+            <a href="{% url 'product_list' %}">Ver catalogo completo</a>
+        {% endfor %}
     </section>
 
     <section class="products-section">

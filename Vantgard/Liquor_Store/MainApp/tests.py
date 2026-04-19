@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
-from .models import Pedido, Producto
+from .models import CategoriaProducto, Pedido, Producto
 
 
 User = get_user_model()
@@ -21,6 +21,7 @@ class PurchaseFlowTests(TestCase):
         super().tearDownClass()
 
     def setUp(self):
+        self.category, _ = CategoriaProducto.objects.get_or_create(nombre="Whisky")
         self.user = User.objects.create_user(
             username="cliente1",
             email="cliente1@example.com",
@@ -29,6 +30,7 @@ class PurchaseFlowTests(TestCase):
         self.product = Producto.objects.create(
             nombre="Whisky Test",
             descripcion="Botella de prueba",
+            categoria=self.category,
             precio=Decimal("25000"),
             stock=5,
             activo=True,
@@ -70,5 +72,35 @@ class PurchaseFlowTests(TestCase):
         )
 
         response = self.client.get(reverse("order_tracking", kwargs={"token": order.tracking_token}))
+        self.assertEqual(response.status_code, 302)
+
+        self.client.login(username="cliente1", password="ComplexPass123")
+        response = self.client.get(reverse("order_tracking", kwargs={"token": order.tracking_token}))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, order.tracking_token)
+
+    def test_product_list_filters_by_category_offer_and_sort(self):
+        gin_category, _ = CategoriaProducto.objects.get_or_create(nombre="Gin")
+        Producto.objects.create(
+            nombre="Gin Test",
+            descripcion="Botella de gin",
+            categoria=gin_category,
+            precio=Decimal("20000"),
+            stock=4,
+            activo=True,
+            is_offer=True,
+            discount_percent=10,
+        )
+
+        response = self.client.get(
+            reverse("product_list"),
+            {
+                "categoria": gin_category.slug,
+                "oferta": "1",
+                "orden": "menor_precio",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        productos = list(response.context["productos"])
+        self.assertEqual(len(productos), 1)
+        self.assertEqual(productos[0].nombre, "Gin Test")

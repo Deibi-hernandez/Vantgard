@@ -8,6 +8,7 @@
     </a>
     <div class="product-content">
         <div class="product-tags">
+            <span class="tag tag-muted">{{ producto.categoria.nombre }}</span>
             {% if producto.is_offer %}
                 <span class="tag">-{{ producto.discount_percent }}%</span>
             {% endif %}

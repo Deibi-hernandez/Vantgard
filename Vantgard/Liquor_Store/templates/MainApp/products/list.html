@@ -20,6 +20,54 @@
                     <h2>{{ productos|length }} etiquetas activas.</h2>
                 </div>
             </div>
+            <form method="get" class="row g-3 mb-4" aria-label="Filtros de catalogo">
+                <div class="col-md-3">
+                    <label class="form-label" for="categoria">Categoria</label>
+                    <select class="form-select" name="categoria" id="categoria">
+                        <option value="">Todas</option>
+                        {% for categoria in categorias %}
+                            <option value="{{ categoria.slug }}" {% if filtros_aplicados.categoria == categoria.slug %}selected{% endif %}>
+                                {{ categoria.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label" for="precio_min">Precio min</label>
+                    <input class="form-control" type="number" min="0" step="1" id="precio_min" name="precio_min" value="{{ filtros_aplicados.precio_min|default:'' }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label" for="precio_max">Precio max</label>
+                    <input class="form-control" type="number" min="0" step="1" id="precio_max" name="precio_max" value="{{ filtros_aplicados.precio_max|default:'' }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label" for="orden">Ordenar por</label>
+                    <select class="form-select" name="orden" id="orden">
+                        <option value="recientes" {% if filtros_aplicados.orden == "recientes" %}selected{% endif %}>Mas recientes</option>
+                        <option value="populares" {% if filtros_aplicados.orden == "populares" %}selected{% endif %}>Mas populares</option>
+                        <option value="menor_precio" {% if filtros_aplicados.orden == "menor_precio" %}selected{% endif %}>Menor precio</option>
+                        <option value="mayor_precio" {% if filtros_aplicados.orden == "mayor_precio" %}selected{% endif %}>Mayor precio</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <div class="form-check me-2">
+                        <input class="form-check-input" type="checkbox" id="oferta" name="oferta" value="1" {% if filtros_aplicados.oferta %}checked{% endif %}>
+                        <label class="form-check-label" for="oferta">Oferta</label>
+                    </div>
+                    <div class="form-check me-2">
+                        <input class="form-check-input" type="checkbox" id="nuevos" name="nuevos" value="1" {% if filtros_aplicados.nuevos %}checked{% endif %}>
+                        <label class="form-check-label" for="nuevos">Nuevos</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="populares" name="populares" value="1" {% if filtros_aplicados.populares %}checked{% endif %}>
+                        <label class="form-check-label" for="populares">Populares</label>
+                    </div>
+                </div>
+                <div class="col-12 d-flex gap-2">
+                    <button type="submit" class="btn btn-dark">Aplicar filtros</button>
+                    <a class="btn btn-outline-secondary" href="{% url 'product_list' %}">Limpiar</a>
+                </div>
+            </form>
 
             {% if productos %}
                 <div class="product-grid">

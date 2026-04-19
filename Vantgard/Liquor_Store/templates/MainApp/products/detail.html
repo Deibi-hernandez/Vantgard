@@ -41,6 +41,10 @@
 
                     <dl class="tech-list">
                         <div>
+                            <dt>Categoria</dt>
+                            <dd>{{ producto.categoria.nombre }}</dd>
+                        </div>
+                        <div>
                             <dt>Stock</dt>
                             <dd>
                                 {% if producto.stock > 0 %}
@@ -53,6 +57,10 @@
                         <div>
                             <dt>Ventas</dt>
                             <dd>{{ producto.contador_ventas }}</dd>
+                        </div>
+                        <div>
+                            <dt>Publicado</dt>
+                            <dd>{{ producto.created_at|date:"d/m/Y" }}</dd>
                         </div>
                         <div>
                             <dt>Estado</dt>
