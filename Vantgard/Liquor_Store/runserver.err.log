@@ -1,0 +1,38 @@
+[19/Apr/2026 19:09:17] "GET / HTTP/1.1" 200 9866
+[19/Apr/2026 19:09:17,127] - Broken pipe from ('127.0.0.1', 56774)
+Not Found: /favicon.ico
+[19/Apr/2026 19:09:36] "GET /favicon.ico HTTP/1.1" 404 6438
+[19/Apr/2026 19:09:36] "GET / HTTP/1.1" 200 9866
+[19/Apr/2026 19:09:36] "GET /productos/ HTTP/1.1" 200 8605
+[19/Apr/2026 19:09:36] "GET /carrito/ HTTP/1.1" 200 2631
+[19/Apr/2026 19:09:36] "GET /checkout/ HTTP/1.1" 302 0
+[19/Apr/2026 19:09:36] "GET /login/?next=/checkout/ HTTP/1.1" 200 3546
+[19/Apr/2026 19:09:36] "GET /cuenta/ HTTP/1.1" 302 0
+[19/Apr/2026 19:09:36] "GET /login/?next=/cuenta/ HTTP/1.1" 200 3546
+[19/Apr/2026 19:09:36] "GET /registro/ HTTP/1.1" 200 5400
+[19/Apr/2026 19:09:37] "GET /login/ HTTP/1.1" 200 3546
+[19/Apr/2026 19:09:37,033] - Broken pipe from ('127.0.0.1', 57515)
+[19/Apr/2026 19:09:44] "GET / HTTP/1.1" 200 10500
+[19/Apr/2026 19:09:44] "GET /static/MainApp/css/store.css HTTP/1.1" 200 14044
+[19/Apr/2026 19:10:34] "GET / HTTP/1.1" 200 10500
+[19/Apr/2026 19:10:34] "GET /static/MainApp/css/store.css HTTP/1.1" 304 0
+[19/Apr/2026 19:10:38] "GET /productos/ HTTP/1.1" 200 9239
+[19/Apr/2026 19:10:47] "GET /productos/?categoria=vodka&precio_min=&precio_max=&orden=recientes HTTP/1.1" 200 8417
+[19/Apr/2026 19:10:50] "GET /admin/MainApp/producto/add/ HTTP/1.1" 200 22789
+[19/Apr/2026 19:10:50] "GET /admin/jsi18n/ HTTP/1.1" 200 8212
+[19/Apr/2026 19:11:03] "GET /admin/ HTTP/1.1" 200 12449
+[19/Apr/2026 19:11:06] "GET / HTTP/1.1" 200 10500
+[19/Apr/2026 19:11:11] "GET /productos/?categoria=espumantes HTTP/1.1" 200 8417
+[19/Apr/2026 19:11:15] "GET /cuenta/ HTTP/1.1" 200 3930
+[19/Apr/2026 19:11:16] "GET / HTTP/1.1" 200 10500
+[19/Apr/2026 19:11:20] "GET /productos/whisky/ HTTP/1.1" 200 6087
+[19/Apr/2026 19:11:21] "GET /static/MainApp/css/store.css HTTP/1.1" 304 0
+[19/Apr/2026 19:11:29] "POST /carrito/agregar/3/ HTTP/1.1" 302 0
+[19/Apr/2026 19:11:29] "GET /carrito/ HTTP/1.1" 200 5363
+[19/Apr/2026 19:11:33] "GET /checkout/ HTTP/1.1" 200 5110
+[19/Apr/2026 19:11:55] "GET /productos/ HTTP/1.1" 200 9239
+[19/Apr/2026 19:11:57] "GET /carrito/ HTTP/1.1" 200 5140
+[19/Apr/2026 19:11:58] "GET / HTTP/1.1" 200 10500
+[19/Apr/2026 19:12:00] "GET /cuenta/ HTTP/1.1" 200 3930
+[19/Apr/2026 19:12:01] "GET /mis-pedidos/ HTTP/1.1" 200 3275
+[19/Apr/2026 19:12:03] "GET /admin/ HTTP/1.1" 200 12449
