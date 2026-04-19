@@ -3,7 +3,17 @@ from django.contrib.auth.admin import UserAdmin
 from django.db.models import Count
 from django.utils.html import format_html
 
-from .models import Blog, CustomUser, DetallePedido, GiftExperience, Pedido, Producto
+from .forms import ProductoForm
+from .models import Blog, CategoriaProducto, CustomUser, DetallePedido, GiftExperience, Pedido, Producto
+
+
+@admin.register(CategoriaProducto)
+class CategoriaProductoAdmin(admin.ModelAdmin):
+    list_display = ("nombre", "slug", "activa", "created_at")
+    list_filter = ("activa", "created_at")
+    search_fields = ("nombre", "slug")
+    prepopulated_fields = {"slug": ("nombre",)}
+    readonly_fields = ("created_at",)
 
 
 @admin.register(CustomUser)
@@ -31,8 +41,10 @@ class CustomUserAdmin(UserAdmin):
 
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
+    form = ProductoForm
     list_display = (
         "nombre",
+        "categoria",
         "precio",
         "precio_final_display",
         "stock",
@@ -42,7 +54,7 @@ class ProductoAdmin(admin.ModelAdmin):
         "is_limited_edition",
         "activo",
     )
-    list_filter = ("activo", "is_offer", "is_limited_edition", "created_at")
+    list_filter = ("categoria", "activo", "is_offer", "is_limited_edition", "created_at")
     search_fields = ("nombre", "descripcion", "slug")
     prepopulated_fields = {"slug": ("nombre",)}
     readonly_fields = ("contador_ventas", "created_at", "updated_at")
@@ -118,7 +130,12 @@ class PedidoAdmin(admin.ModelAdmin):
     readonly_fields = ("codigo", "tracking_token", "created_at", "updated_at", "qr_preview")
     inlines = (DetallePedidoInline,)
     date_hierarchy = "created_at"
-    actions = ("mark_as_preparando", "mark_as_enviado", "mark_as_entregado")
+    actions = (
+        "mark_as_preparando",
+        "mark_as_en_camino",
+        "mark_as_listo_retiro",
+        "mark_as_entregado",
+    )
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
@@ -140,9 +157,13 @@ class PedidoAdmin(admin.ModelAdmin):
     def mark_as_preparando(self, request, queryset):
         queryset.update(estado_pedido=Pedido.EstadoPedido.PREPARANDO)
 
-    @admin.action(description="Marcar como enviado")
-    def mark_as_enviado(self, request, queryset):
-        queryset.update(estado_pedido=Pedido.EstadoPedido.ENVIADO)
+    @admin.action(description="Marcar como en camino")
+    def mark_as_en_camino(self, request, queryset):
+        queryset.update(estado_pedido=Pedido.EstadoPedido.EN_CAMINO)
+
+    @admin.action(description="Marcar como listo para retiro")
+    def mark_as_listo_retiro(self, request, queryset):
+        queryset.update(estado_pedido=Pedido.EstadoPedido.LISTO_RETIRO)
 
     @admin.action(description="Marcar como entregado")
     def mark_as_entregado(self, request, queryset):

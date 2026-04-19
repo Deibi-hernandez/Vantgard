@@ -1,16 +1,20 @@
 from decimal import Decimal
+from datetime import timedelta
 
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
 from .forms import CartAddForm, CartUpdateForm, CheckoutForm, CustomerRegistrationForm
-from .models import Blog, DetallePedido, Pedido, Producto
+from .models import Blog, CategoriaProducto, DetallePedido, Pedido, Producto
 from .services import get_payment_service
 
 CART_SESSION_KEY = "cart_items"
+RECENT_DAYS_WINDOW = 30
 
 
 def _get_cart(request):
@@ -65,24 +69,88 @@ def home(request):
         "nombre",
     )[:3]
     ultimas_notas = Blog.objects.filter(publicado=True)[:3]
+    categorias = CategoriaProducto.objects.filter(activa=True)
 
     context = {
         "productos_destacados": productos_destacados,
         "ofertas": ofertas,
         "mas_comprados": mas_comprados,
         "ultimas_notas": ultimas_notas,
+        "categorias": categorias,
     }
     return render(request, "MainApp/home.html", context)
 
 
 def product_list(request):
-    productos = Producto.objects.filter(activo=True).order_by("nombre")
-    return render(request, "MainApp/products/list.html", {"productos": productos})
+    productos = Producto.objects.filter(activo=True).select_related("categoria")
+    categorias = CategoriaProducto.objects.filter(activa=True)
+    filtros_aplicados = {}
+
+    category_slug = request.GET.get("categoria", "").strip()
+    if category_slug:
+        productos = productos.filter(categoria__slug=category_slug)
+        filtros_aplicados["categoria"] = category_slug
+
+    min_price = request.GET.get("precio_min", "").strip()
+    if min_price:
+        try:
+            min_price_decimal = Decimal(min_price)
+            if min_price_decimal >= 0:
+                productos = productos.filter(precio__gte=min_price_decimal)
+                filtros_aplicados["precio_min"] = min_price
+        except Exception:
+            messages.warning(request, "El precio minimo ingresado no es valido.")
+
+    max_price = request.GET.get("precio_max", "").strip()
+    if max_price:
+        try:
+            max_price_decimal = Decimal(max_price)
+            if max_price_decimal >= 0:
+                productos = productos.filter(precio__lte=max_price_decimal)
+                filtros_aplicados["precio_max"] = max_price
+        except Exception:
+            messages.warning(request, "El precio maximo ingresado no es valido.")
+
+    if request.GET.get("oferta"):
+        productos = productos.filter(is_offer=True, discount_percent__gt=0)
+        filtros_aplicados["oferta"] = "1"
+
+    if request.GET.get("nuevos"):
+        productos = productos.filter(created_at__gte=timezone.now() - timedelta(days=RECENT_DAYS_WINDOW))
+        filtros_aplicados["nuevos"] = "1"
+
+    if request.GET.get("populares"):
+        productos = productos.filter(contador_ventas__gt=0)
+        filtros_aplicados["populares"] = "1"
+
+    sort = request.GET.get("orden", "recientes")
+    sorting_map = {
+        "recientes": "-created_at",
+        "populares": "-contador_ventas",
+        "menor_precio": "precio",
+        "mayor_precio": "-precio",
+    }
+    productos = productos.order_by(sorting_map.get(sort, "-created_at"), "nombre")
+    filtros_aplicados["orden"] = sort if sort in sorting_map else "recientes"
+
+    return render(
+        request,
+        "MainApp/products/list.html",
+        {
+            "productos": productos,
+            "categorias": categorias,
+            "filtros_aplicados": filtros_aplicados,
+        },
+    )
 
 
 def product_detail(request, slug):
     producto = get_object_or_404(Producto, slug=slug, activo=True)
-    relacionados = Producto.objects.filter(activo=True).exclude(pk=producto.pk)[:3]
+    relacionados = (
+        Producto.objects.filter(activo=True, categoria=producto.categoria)
+        .exclude(pk=producto.pk)
+        .order_by("-contador_ventas", "-created_at")[:3]
+    )
 
     return render(
         request,
@@ -114,6 +182,12 @@ def register(request):
 def account(request):
     recent_orders = request.user.pedidos.select_related().prefetch_related("detalles__producto")[:5]
     return render(request, "MainApp/account.html", {"recent_orders": recent_orders})
+
+
+@login_required
+def order_history(request):
+    orders = request.user.pedidos.prefetch_related("detalles__producto")
+    return render(request, "MainApp/tracking/history.html", {"orders": orders})
 
 
 def cart_detail(request):
@@ -309,6 +383,13 @@ def checkout_success(request, codigo):
     return render(request, "MainApp/checkout/success.html", {"order": order})
 
 
+@login_required
 def order_tracking(request, token):
-    order = get_object_or_404(Pedido.objects.prefetch_related("detalles__producto"), tracking_token=token)
+    order_filters = Q(tracking_token=token)
+    if not request.user.is_staff:
+        order_filters &= Q(usuario=request.user)
+    order = get_object_or_404(
+        Pedido.objects.prefetch_related("detalles__producto").select_related("usuario"),
+        order_filters,
+    )
     return render(request, "MainApp/tracking/detail.html", {"order": order})

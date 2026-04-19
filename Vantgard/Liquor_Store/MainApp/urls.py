@@ -13,6 +13,7 @@ urlpatterns = [
     path('carrito/quitar/<int:product_id>/', views.cart_remove, name='cart_remove'),
     path('checkout/', views.checkout, name='checkout'),
     path('checkout/exito/<uuid:codigo>/', views.checkout_success, name='checkout_success'),
+    path('mis-pedidos/', views.order_history, name='order_history'),
     path('tracking/<str:token>/', views.order_tracking, name='order_tracking'),
     path('cuenta/', views.account, name='account'),
     path('registro/', views.register, name='register'),

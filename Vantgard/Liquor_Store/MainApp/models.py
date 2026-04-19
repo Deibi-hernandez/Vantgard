@@ -52,10 +52,35 @@ class CustomUser(AbstractUser):
         super().save(*args, **kwargs)
 
 
+class CategoriaProducto(models.Model):
+    nombre = models.CharField(max_length=80, unique=True)
+    slug = models.SlugField(max_length=100, unique=True, blank=True)
+    activa = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["nombre"]
+        verbose_name = "categoria"
+        verbose_name_plural = "categorias"
+
+    def __str__(self):
+        return self.nombre
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = build_unique_slug(self, self.nombre)
+        super().save(*args, **kwargs)
+
+
 class Producto(models.Model):
     nombre = models.CharField(max_length=160)
     slug = models.SlugField(max_length=180, unique=True, blank=True)
     descripcion = models.TextField()
+    categoria = models.ForeignKey(
+        CategoriaProducto,
+        on_delete=models.PROTECT,
+        related_name="productos",
+    )
     precio = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -85,10 +110,10 @@ class Producto(models.Model):
         return self.nombre
 
     def clean(self):
-        if self.discount_percent and not self.is_offer:
-            raise ValidationError(
-                {"discount_percent": "Marca el producto como oferta para aplicar descuento."}
-            )
+        if self.is_offer and self.discount_percent <= 0:
+            raise ValidationError({"discount_percent": "Debes indicar un descuento valido para una oferta."})
+        if not self.is_offer and self.discount_percent:
+            raise ValidationError({"discount_percent": "Marca el producto como oferta para aplicar descuento."})
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -135,10 +160,11 @@ class GiftExperience(models.Model):
 
 class Pedido(models.Model):
     class EstadoPedido(models.TextChoices):
-        PENDIENTE = "pendiente", "Pendiente"
+        RECIBIDO = "recibido", "Recibido"
         PAGADO = "pagado", "Pagado"
         PREPARANDO = "preparando", "Preparando"
-        ENVIADO = "enviado", "Enviado"
+        EN_CAMINO = "en_camino", "En camino"
+        LISTO_RETIRO = "listo_retiro", "Listo para retiro"
         ENTREGADO = "entregado", "Entregado"
         CANCELADO = "cancelado", "Cancelado"
 
@@ -177,7 +203,7 @@ class Pedido(models.Model):
     estado_pedido = models.CharField(
         max_length=20,
         choices=EstadoPedido.choices,
-        default=EstadoPedido.PENDIENTE,
+        default=EstadoPedido.RECIBIDO,
     )
     total = models.DecimalField(
         max_digits=10,

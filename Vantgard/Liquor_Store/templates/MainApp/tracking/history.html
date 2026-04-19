@@ -1,0 +1,40 @@
+{% extends "MainApp/base.html" %}
+
+{% block title %}Mis pedidos | Vantgard{% endblock %}
+
+{% block content %}
+<main class="container py-4">
+    <h1>Mis pedidos</h1>
+    {% if orders %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Pago</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{ order.codigo }}</td>
+                            <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                            <td>{{ order.get_estado_pedido_display }}</td>
+                            <td>{{ order.get_estado_pago_display }}</td>
+                            <td>$ {{ order.total|floatformat:0 }}</td>
+                            <td><a href="{% url 'order_tracking' order.tracking_token %}">Ver seguimiento</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No tienes pedidos registrados aún.</p>
+        <a class="btn btn-primary" href="{% url 'product_list' %}">Ir a productos</a>
+    {% endif %}
+</main>
+{% endblock %}
